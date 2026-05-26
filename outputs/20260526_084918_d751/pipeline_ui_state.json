@@ -32,17 +32,18 @@
     "4": {
       "key": "gen_videos",
       "title": "视频",
-      "status": "running",
+      "status": "success",
       "error": null,
-      "updated_at": "2026-05-26T00:51:58.023675Z"
+      "updated_at": "2026-05-26T01:27:26.959395Z"
     },
     "5": {
       "key": "concat",
       "title": "成片",
-      "status": "pending",
+      "status": "success",
       "error": null,
-      "updated_at": null
+      "updated_at": "2026-05-26T01:28:33.311710Z"
     }
   },
-  "last_global_error": null
+  "last_global_error": null,
+  "final_mp4": "G:/AICoding/manga-pipeline/outputs/20260526_084918_d751/final.mp4"
 }
