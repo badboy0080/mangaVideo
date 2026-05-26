@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "description": "Camera movement grammar for storyboard and Seedance prompt decisions.",
+  "rules": {
+    "建立环境": {
+      "preferred_moves": ["wide static shot", "slow lateral reveal", "slow pull-back"],
+      "director_refs": ["Steven Spielberg", "Hou Hsiao-hsien", "Edward Yang"],
+      "emotional_effect": "空间清晰、处境建立、观众进入故事世界"
+    },
+    "展示人物状态": {
+      "preferred_moves": ["locked-off medium shot", "slow push-in", "close-up hold"],
+      "director_refs": ["David Fincher", "Wong Kar-wai", "Stanley Kubrick"],
+      "emotional_effect": "克制、观察、内心压力逐渐显形"
+    },
+    "制造压力": {
+      "preferred_moves": ["slow push-in", "over-the-shoulder compression", "locked-off shot"],
+      "director_refs": ["David Fincher", "Alfred Hitchcock", "Stanley Kubrick"],
+      "emotional_effect": "逼近、焦虑、被审视、压迫增强"
+    },
+    "揭示信息": {
+      "preferred_moves": ["Spielberg-style discovery push", "rack focus", "slow pan reveal"],
+      "director_refs": ["Steven Spielberg", "Alfred Hitchcock", "Bong Joon-ho"],
+      "emotional_effect": "发现、悬疑、认知变化"
+    },
+    "推动动作": {
+      "preferred_moves": ["tracking shot", "handheld follow", "lateral movement"],
+      "director_refs": ["Martin Scorsese", "Akira Kurosawa", "Alfonso Cuaron"],
+      "emotional_effect": "行动感、紧迫、身体性、局面推进"
+    },
+    "完成转折": {
+      "preferred_moves": ["sudden cut to close-up", "slow orbit", "dolly zoom"],
+      "director_refs": ["Alfred Hitchcock", "Christopher Nolan", "Bong Joon-ho"],
+      "emotional_effect": "震惊、权力反转、心理失衡"
+    },
+    "呈现结果": {
+      "preferred_moves": ["slow pull-back", "wide static hold", "high angle hold"],
+      "director_refs": ["Hou Hsiao-hsien", "Edward Yang", "Andrei Tarkovsky"],
+      "emotional_effect": "余韵、孤立、代价、命运感"
+    },
+    "改变人物关系": {
+      "preferred_moves": ["two-shot reframing", "orbit", "shot-reverse-shot compression"],
+      "director_refs": ["Wong Kar-wai", "Quentin Tarantino", "Bong Joon-ho"],
+      "emotional_effect": "暧昧、对峙、权力变化、关系重新定位"
+    }
+  }
+}

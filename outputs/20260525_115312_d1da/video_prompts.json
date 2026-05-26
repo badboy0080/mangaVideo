@@ -1,0 +1,159 @@
+{
+  "shot_01": {
+    "prompt": "固定镜头，远景，稍高角度。@楚军士兵们 从 @War_Boat 上缓慢走下，踏上泥泞的河岸。@项羽 站在船头，红色披风在风中飘动，他手按剑柄，目光沉静而坚定。@楚军军旗 在风中剧烈飘扬。",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片2.png",
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片4.png"
+    ],
+    "duration_ms": 10000,
+    "chars_in_shot": [
+      "Chu",
+      "War",
+      "项羽",
+      "楚军军旗"
+    ],
+    "scenes_in_shot": [
+      "Zhang",
+      "Xiang",
+      "Banner"
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，史诗感，明亮色彩。参考图：@Zhang_River_Bank, @Xiang_Yu, @Chu_Soldiers, @War_Boat, @Banner_of_Chu。\n摄像机：固定镜头，远景，稍高角度。\n主体：楚军士兵们从战船上缓慢走下，踏上泥泞的河岸。@项羽 站在船头，红色披风在风中飘动，他手按剑柄，目光沉静而坚定。@楚军军旗 在风中剧烈飘扬。\n空间：宽阔的河面，远处铅灰色的天空和连绵的山脉，河滩泥泞，整体氛围压抑。\n音频：<沉重的脚步声>，<河水拍打船身>，<军旗猎猎作响>。无角色口型对白，旁白由独立音轨负责。\nno music, no subtitles\nno text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_02": {
+    "prompt": "@项羽 从船头跃下，大步走向 @War_Boat，中景平视。切至特写，@项羽 挥剑，剑刃重重砍入船底木料，木屑向镜头方向飞溅。切至中景，@项羽 转身面对镜头，眼神坚定，下令：`{凿沉所有船只！}`。镜头缓缓推近他的脸，强调他眼神中的决绝。",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片2.png"
+    ],
+    "duration_ms": 12000,
+    "chars_in_shot": [
+      "War",
+      "项羽"
+    ],
+    "scenes_in_shot": [
+      "Zhang",
+      "Xiang",
+      "Cooking"
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，史诗感，明亮色彩。参考图：@Xiang_Yu, @War_Boat。\n镜头1：@项羽 从船头跳下，大步走向一艘战船，中景，平视。\n镜头2：切至特写，@项羽 挥剑，剑刃重重砍入船底木料，木屑向镜头方向飞溅。\n镜头3：切至中景，@项羽 转身面对镜头，眼神坚定，下令：`{凿沉所有船只！}`。镜头缓缓推近他的脸，强调他眼神中的决绝。\n空间：漳河河岸，泥泞的滩涂，周围是等待渡河的士兵和战船。\n音频：<剑砍木头声>，`{凿沉所有船只！}`（@项羽 声音低沉、坚定）。无旁白。\nno music, no subtitles\nno text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_03": {
+    "prompt": "特写，@项羽 举起铁锤，锤子带着力量砸向@Cooking_Pot。切至慢动作，@Cooking_Pot 被砸碎，碎片向四周飞溅。切至中景，士兵们震惊地看着，然后眼神变得坚定，纷纷举起手中的武器砸向自己的锅碗瓢盆，发出连续的碎裂声。@项羽 站在中间，喊道：`{破釜！}`。",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片8.png",
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片2.png"
+    ],
+    "duration_ms": 10000,
+    "chars_in_shot": [
+      "Camp",
+      "Chu",
+      "营地",
+      "项羽"
+    ],
+    "scenes_in_shot": [
+      "Xiang",
+      "Cooking"
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，史诗感，明亮色彩。参考图：@Xiang_Yu, @Camp_Area, @Cooking_Pot。\n镜头1：特写，@项羽 举起铁锤，锤子带着力量砸向青铜锅。\n镜头2：切至慢动作，青铜锅被砸碎，碎片向四周飞溅。\n镜头3：切至中景，士兵们震惊地看着，然后眼神变得坚定，纷纷举起手中的武器砸向自己的锅碗瓢盆，发出连续的碎裂声。@项羽 站在中间，喊道：`{破釜！}`。\n空间：河岸旁的营地，地面散落着被砸碎的陶罐、炊具和木柴，周围是篝火和烟尘。\n音频：<铁器撞击陶器、青铜器的碎裂声>，`{破釜！}`（@项羽 声音洪亮）。无旁白。\nno music, no subtitles\nno text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_04": {
+    "prompt": "远景，低角度，@战船 缓缓沉入水中，河水漫过船舷，只留下木屑和气泡。中景，@项羽 背对镜头，看着沉船，他缓缓转身，面向士兵们。特写，@项羽 表情激昂，大声说道：`{今日之战，有进无退！不破秦军，绝不生还！}`。镜头缓缓推近他的脸。全景，士兵们举起武器，发出震天的呐喊。宽阔的漳河河岸，一艘战船正在沉没，河面泛着水花，远处是连绵山脉。",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片2.png",
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片3.png"
+    ],
+    "duration_ms": 10000,
+    "chars_in_shot": [
+      "Chu",
+      "War",
+      "项羽",
+      "战船"
+    ],
+    "scenes_in_shot": [
+      "Zhang",
+      "Xiang"
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，史诗感，明亮色彩。参考图：@Zhang_River_Bank, @Xiang_Yu, @War_Boat。\n镜头1：远景，低角度，@战船 缓缓沉入水中，河水漫过船舷，只留下木屑和气泡。\n镜头2：切至中景，@项羽 背对镜头，看着沉船，他缓缓转身，面向士兵们。\n镜头3：切至特写，@项羽 表情激昂，大声说道：`{今日之战，有进无退！不破秦军，绝不生还！}`。镜头缓缓推近他的脸。随后切至全景，士兵们举起武器，发出震天的呐喊。\n空间：宽阔的漳河河岸，一艘战船正在沉没，河面泛着水花，远处是连绵山脉。\n音频：<战船沉没的水声>，`{今日之战，有进无退！不破秦军，绝不生还！}`（@项羽 语气激昂），<士兵们震天的呐喊声>。无旁白。\nno music, no subtitles\nno text overlay\n\n## 第二幕：决战",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_05": {
+    "prompt": "侧面跟拍，@项羽 策马冲锋，长矛前指，红色披风在身后剧烈飞扬。切至正面，@项羽 冲入秦军阵中，长矛横扫，将一名秦军士兵打下马。切至全景，楚军士兵们呐喊冲锋，@楚军军旗 在战场上猛烈飘扬，秦军阵列被冲散，战场一片混乱。开阔的平原，尘土飞扬，阳光从阴云缝隙中透出，形成戏剧性光束。",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片2.png",
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片4.png"
+    ],
+    "duration_ms": 12000,
+    "chars_in_shot": [
+      "Chu",
+      "项羽",
+      "秦军阵列",
+      "楚军军旗"
+    ],
+    "scenes_in_shot": [
+      "Battle",
+      "Xiang",
+      "Banner"
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，史诗感，明亮色彩。参考图：@Battle_Field, @Xiang_Yu, @Chu_Soldiers, @Banner_of_Chu。\n镜头1：侧面跟拍，@项羽 策马冲锋，长矛前指，红色披风在身后飞扬。\n镜头2：切至正面，@项羽 冲入秦军阵中，长矛横扫，将一名秦军士兵打下马。\n镜头3：切至全景，楚军士兵们呐喊冲锋，@楚军军旗 在战场上飘扬，秦军阵列被冲散，战场一片混乱。\n空间：开阔的平原，尘土飞扬，阳光从阴云缝隙中透出，形成戏剧性光束。\n音频：<震天的喊杀声>，<兵器碰撞声>，<急促的马蹄声>。无角色口型对白，旁白由独立音轨负责。\nno music, no subtitles\nno text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_06": {
+    "prompt": "中景平视，镜头缓缓拉远。@项羽 身体因疲惫而微微摇晃，深吸一口气，用力将@楚军军旗 插在地上。抬起头望向天空，脸上露出疲惫但自豪的微笑。周围的@Chu_Soldiers 围拢过来，发出胜利的欢呼。硝烟弥漫飘散，阳光从云层中透出，照亮军旗。地面散落破碎兵器。",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片2.png",
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片4.png"
+    ],
+    "duration_ms": 8000,
+    "chars_in_shot": [
+      "Chu",
+      "项羽",
+      "楚军军旗"
+    ],
+    "scenes_in_shot": [
+      "Battle",
+      "Xiang",
+      "Banner"
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，史诗感，明亮色彩。参考图：@Battle_Field, @Xiang_Yu, @Chu_Soldiers, @Banner_of_Chu。\n摄像机：中景，平视，镜头缓缓拉远。\n主体：@项羽 站在硝烟弥漫的战场上，身体因疲惫而微微摇晃，但他深吸一口气，用力将@楚军军旗 插在地上。他抬起头，望向天空，脸上露出疲惫但自豪的微笑。周围的楚军士兵围拢过来，发出胜利的欢呼。\n空间：战场，地面散落着破碎的兵器，硝烟弥漫，阳光从云层中透出，照亮了军旗。\n音频：<士兵们逐渐减弱的欢呼声>，<风声>。无角色口型对白，旁白由独立音轨负责。\nno music, no subtitles\nno text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_07": {
+    "prompt": "夕阳缓缓沉入地平线，余晖在平静的漳河河面上泛起粼粼波光，@Zhang_River_Bank 的桅杆斜斜露出水面，投下长长的影子，水波微动。",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/images/img_图片2.png"
+    ],
+    "duration_ms": 8000,
+    "chars_in_shot": [
+      "项羽"
+    ],
+    "scenes_in_shot": [
+      "Zhang",
+      "Xiang"
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，史诗感，明亮色彩。参考图：@Zhang_River_Bank。\n摄像机：固定镜头，远景。\n主体：夕阳缓缓沉入地平线，温暖的余晖洒在平静的漳河河面上，波光粼粼。河水深处，一艘沉船的桅杆斜斜地露出水面，投下长长的影子。画面静止，只有水波微动。\n空间：宽阔的河面，远处是夕阳和连绵的群山，整体氛围宁静、沉思。\n音频：<水流声>，<风声>。无角色口型对白，旁白由独立音轨负责。\nno music, no subtitles\nno text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  }
+}

@@ -1,0 +1,38 @@
+---
+description: 防止 web 前端中文 UI 被保存成问号乱码（UTF-8）
+globs: web/src/**/*.{tsx,ts,jsx,js}
+alwaysApply: false
+---
+
+# Web 中文文案必须用 UTF-8，禁止变成 `????`
+
+## 现象
+
+页面按钮、提示显示 `????` / `???`，多见于 `web/src/App.tsx` 及含中文的组件。
+
+## 根因（已多次发生）
+
+- 用 **PowerShell** `Set-Content` / 错误编码整文件重写 TypeScript
+- `git checkout` 恢复到 git 里已是乱码的旧版本
+- 编辑工具未以 **UTF-8** 保存含中文的 `.tsx`
+
+## 修改含中文文件时必须
+
+1. 只用 **小范围 patch**（StrReplace / 编辑器），不要 PowerShell 整文件重写
+2. 改完 **`web/src/App.tsx`** 后运行：
+   ```bash
+   python scripts/restore_app_chinese.py
+   python scripts/check_ui_chinese.py
+   ```
+3. 提交前确认：`web/src` 内无连续 3 个以上 `?` 的 UI 文案（`??` 三元运算符、`??` 空值合并除外）
+
+## 修复脚本
+
+- [`scripts/restore_app_chinese.py`](scripts/restore_app_chinese.py) — 恢复 `App.tsx` 已知中文
+- [`scripts/check_ui_chinese.py`](scripts/check_ui_chinese.py) — 扫描 `web/src` 乱码
+
+## 禁止
+
+- `git checkout -- web/src/App.tsx` 后不跑 restore 脚本
+- PowerShell 无 `-Encoding utf8` 的整文件写入
+- 在对话里用错误编码粘贴覆盖整份 `App.tsx`

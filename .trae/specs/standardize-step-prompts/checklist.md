@@ -1,0 +1,30 @@
+# Checklist
+
+- [ ] Step 01 文档包含「## 管道阶段 (Pipeline Stage)」小节
+- [ ] Step 01 文档包含「## 入参 (Input)」小节（列出 10 个字段及类型/必填/说明）
+- [ ] Step 01 文档包含「## 出参 (Output)」小节（描述 creative_brief 六大输出块）
+- [ ] Step 02 文档包含「## 管道阶段 (Pipeline Stage)」小节
+- [ ] Step 02 文档包含「## 入参 (Input)」小节（标记来源为 Step 01）
+- [ ] Step 02 文档包含「## 出参 (Output)」小节（含分镜结构示例）
+- [ ] Step 04_extract_assets 文档包含「## 管道阶段 (Pipeline Stage)」小节
+- [ ] Step 04_extract_assets 文档包含标准「## 入参 (Input)」小节
+- [ ] Step 04_extract_assets 文档包含「## 出参 (Output)」小节（含 JSON Schema）
+- [ ] Step 04_extract_assets 文档中已删除重复的三段式骨架内容（第 37～52 行）
+- [ ] Step 04_extract_assets 文档中以引用方式指向 img_single 的骨架标准
+- [ ] Step 04_img_single 文档包含「## 管道阶段 (Pipeline Stage)」小节
+- [ ] Step 04_img_single 文档包含标准「## 入参 (Input)」小节（资产名称、类型、描述文本）
+- [ ] Step 04_img_single 文档包含「## 出参 (Output)」小节
+- [ ] Step 04_refine_shots 文档包含「## 管道阶段 (Pipeline Stage)」小节
+- [ ] Step 04_refine_shots 文档包含标准「## 入参 (Input)」小节（含字段表）
+- [ ] Step 04_refine_shots 文档包含「## 出参 (Output)」小节（含字段说明表）
+- [ ] Step 06 文档包含「## 管道阶段 (Pipeline Stage)」小节
+- [ ] Step 06 文档包含标准「## 入参 (Input)」小节
+- [ ] Step 06 文档包含「## 出参 (Output)」小节
+- [ ] `prompts/step_03_video_spec_system.txt` 文件已创建
+- [ ] Step 03 文档包含 Role、管道阶段、入参、出参、Execution Rules、Output Constraint
+- [ ] `prompts/step_05_shot_video_system.txt` 文件已创建
+- [ ] Step 05 文档包含 Role、管道阶段、入参、出参、Execution Rules、Output Constraint
+- [ ] Step 05 的 Execution Rules 遵循 promptGuild §4.3 的 Seedance 叙事顺序
+- [ ] `docs/promptGuild` 新增 §1.4「Step 文件与管道阶段映射表」
+- [ ] 映射表正确列出每个 step 文件到管道阶段的对应关系
+- [ ] 所有文档不改变原有核心执行逻辑和输出约束

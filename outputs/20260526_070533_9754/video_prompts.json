@@ -1,0 +1,280 @@
+{
+  "shot_01": {
+    "prompt": "摄像机从@愚公 的中景固定镜头开始，缓慢而稳定地向后拉远，逐渐展露出他身后的农家小院和远方巍峨的 @太行山与王屋山。@愚公 的目光始终望向大山，表情从平静转为一丝无奈，缓缓放下手，转身。在拉远的过程中，两座大山在画面中的比例越来越大，最终占据了画面的上半部分，而 @愚公 和村庄被压缩在画面底部，形成强烈的对比。no music, no subtitles, no text overlay",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片14.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片4.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片13.png"
+    ],
+    "duration_ms": 12000,
+    "chars_in_shot": [
+      "愚公家",
+      "愚公",
+      "YuGong"
+    ],
+    "scenes_in_shot": [
+      "太行山与王屋山",
+      "TaiHang_WangWu_Mountains",
+      "Village_Home"
+    ],
+    "dialogues_in_shot": [],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，角色造型偏卡通化但表情细腻，场景宏大壮丽，光影柔和。参考图绑定：角色参考图@YuGong，场景参考图@TaiHang_WangWu_Mountains，场景参考图@Village_Home。摄像机从@愚公 的中景固定镜头开始，然后缓慢而稳定地向后拉远，逐渐展露出他身后的农家小院和远方巍峨的 @太行山与王屋山。@愚公 的目光始终望向大山，表情从平静转为一丝无奈，缓缓放下手，转身。在拉远的过程中，两座大山在画面中的比例越来越大，最终占据了画面的上半部分，而 @愚公 和村庄被压缩在画面底部，形成强烈的对比。无角色口型对白，旁白由独立音轨负责。no music, no subtitles, no text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_02": {
+    "prompt": "摄像机从家庭会议的全景开始，缓慢稳定地向站在石桌后的@愚公推近。@愚公站起身，双手撑桌，环视家人，说出台词：{我准备与你们一起，用毕生的精力来搬掉太行山和王屋山，修一条通向南方的大道。你们说好吗！} 周围家人先是一愣，随后纷纷点头，齐声回应：{好！} @愚公妻子却皱着眉，手指点着桌面，担忧地说：{我们大家的力量加起来，还不能搬移一座小山，又怎能把太行、王屋两座大山搬掉呢？再说，把那些挖出来的泥土和石块放到哪里去呢？} 摄像机最终停留在@愚公的中近景，他的表情在听到妻子的质疑后变得更加坚毅。愚公坚定的说“我准备与你们一起，用毕生的精力来搬掉太行山和王屋山，修一条通向南方的大道。你们说好吗！<br>@愚公子孙：好！<br>@愚公妻子：我们大家的力量加起来，还不能搬移一座小山，又怎能把太行、王屋两座大山搬掉呢？再说，把那些挖出来的泥土和石块放到哪里去呢？”。no music, no subtitles, no text overlay",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片14.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片4.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片5.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片6.png"
+    ],
+    "duration_ms": 10000,
+    "chars_in_shot": [
+      "愚公家",
+      "愚公",
+      "愚公妻子",
+      "愚公子孙",
+      "YuGong"
+    ],
+    "scenes_in_shot": [
+      "YuGong_Wife",
+      "YuGong_Children",
+      "Village_Home"
+    ],
+    "dialogues_in_shot": [
+      {
+        "speaker": "愚公",
+        "line": "我准备与你们一起，用毕生的精力来搬掉太行山和王屋山，修一条通向南方的大道。你们说好吗！<br>@愚公子孙：好！<br>@愚公妻子：我们大家的力量加起来，还不能搬移一座小山，又怎能把太行、王屋两座大山搬掉呢？再说，把那些挖出来的泥土和石块放到哪里去呢？",
+        "cue": "愚公坚定的说“我准备与你们一起，用毕生的精力来搬掉太行山和王屋山，修一条通向南方的大道。你们说好吗！<br>@愚公子孙：好！<br>@愚公妻子：我们大家的力量加起来，还不能搬移一座小山，又怎能把太行、王屋两座大山搬掉呢？再说，把那些挖出来的泥土和石块放到哪里去呢？”"
+      }
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，角色造型偏卡通化但表情细腻。参考图绑定：角色参考图@YuGong，角色参考图@YuGong_Wife，角色参考图@YuGong_Children，场景参考图@Village_Home。摄像机从家庭会议的全景开始，缓慢地、稳定地向站在石桌后的 @愚公 推近。@愚公 站起身，双手撑桌，环视家人，说出台词：{我准备与你们一起，用毕生的精力来搬掉太行山和王屋山，修一条通向南方的大道。你们说好吗！} 周围家人先是一愣，随后纷纷点头，齐声回应：{好！} @愚公妻子 却皱着眉，手指点着桌面，担忧地说：{我们大家的力量加起来，还不能搬移一座小山，又怎能把太行、王屋两座大山搬掉呢？再说，把那些挖出来的泥土和石块放到哪里去呢？} 摄像机最终停留在 @愚公 的中近景，他的表情在听到妻子的质疑后变得更加坚毅。no music, no subtitles, no text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_03": {
+    "prompt": "摄像机从@愚公 的特写开始，他说：{我们可以把挖出来的泥土和石块扔到东方的海边和北方最远的地方。} 快速切换到@愚公妻子 的特写，她眉头舒展，点了点头。再快速切换到家庭的全景，@愚公子孙 们纷纷站起来，摩拳擦掌。整个镜头序列节奏紧凑，没有多余的停顿。愚公坚定的说“我们可以把挖出来的泥土和石块扔到东方的海边和北方最远的地方。<br>@愚公妻子：（思考片刻，点头）<br>@愚公子孙：（纷纷站起，摩拳擦掌）”。no music, no subtitles, no text overlay",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片14.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片4.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片5.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片6.png"
+    ],
+    "duration_ms": 8000,
+    "chars_in_shot": [
+      "愚公家",
+      "愚公",
+      "愚公妻子",
+      "愚公子孙",
+      "YuGong"
+    ],
+    "scenes_in_shot": [
+      "YuGong_Wife",
+      "YuGong_Children"
+    ],
+    "dialogues_in_shot": [
+      {
+        "speaker": "愚公",
+        "line": "我们可以把挖出来的泥土和石块扔到东方的海边和北方最远的地方。<br>@愚公妻子：（思考片刻，点头）<br>@愚公子孙：（纷纷站起，摩拳擦掌）",
+        "cue": "愚公坚定的说“我们可以把挖出来的泥土和石块扔到东方的海边和北方最远的地方。<br>@愚公妻子：（思考片刻，点头）<br>@愚公子孙：（纷纷站起，摩拳擦掌）”"
+      }
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，角色造型偏卡通化但表情细腻。参考图绑定：角色参考图@YuGong，角色参考图@YuGong_Wife，角色参考图@YuGong_Children。摄像机从@愚公 的特写开始，他说：{我们可以把挖出来的泥土和石块扔到东方的海边和北方最远的地方。} 然后快速切换（cut）到 @愚公妻子 的特写，她眉头舒展，点了点头。再快速切换（cut）到家庭的全景，@愚公子孙 们纷纷站起来，摩拳擦掌。整个镜头序列节奏紧凑，没有多余的停顿。no music, no subtitles, no text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_04": {
+    "prompt": "特写，@愚公 的镐头用力砸向岩石，<碎石飞溅>。切至中景，摄像机平移跟随 @愚公 移动，他挥动镐头，汗水从额头滴落，呼吸变得粗重<粗重的呼吸声>。切至全景，摄像机继续向后移动，展示 @愚公 和 @愚公子孙 们都在山脚下忙碌，整个山坡上充满了劳动的身影。",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片15.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片4.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片6.png"
+    ],
+    "duration_ms": 12000,
+    "chars_in_shot": [
+      "挖山现场",
+      "愚公",
+      "愚公子孙",
+      "YuGong"
+    ],
+    "scenes_in_shot": [
+      "YuGong_Children",
+      "Mountain_Slope"
+    ],
+    "dialogues_in_shot": [],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，角色造型偏卡通化，场景宏大壮丽。参考图绑定：角色参考图@YuGong，角色参考图@YuGong_Children，场景参考图@Mountain_Slope。镜头1（0-4秒）：特写，@愚公 的镐头用力砸向岩石，<碎石飞溅>。镜头2（4-8秒）：切至中景，摄像机平移跟随 @愚公 移动，他挥动镐头，汗水从额头滴落，呼吸变得粗重<粗重的呼吸声>。镜头3（8-12秒）：切至全景，摄像机继续向后移动，展示 @愚公 和 @愚公子孙 们都在山脚下忙碌，整个山坡上充满了劳动的身影。无角色口型对白，旁白由独立音轨负责。no music, no subtitles, no text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_05": {
+    "prompt": "摄像机固定中景，@愚公 位于画面中心偏下位置，持续举起并挥下镐头敲击岩石<持续的镐头敲击声>。叠化至春天，背景树枝发芽<风声>；叠化至夏天，树叶茂密，@愚公 脸上汗水增多；叠化至秋天，黄叶飘落；叠化至冬天，雪花飘落<雪声>，@愚公 披上蓑衣。@愚公 动作节奏始终保持不变。no music, no subtitles, no text overlay",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片15.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片4.png"
+    ],
+    "duration_ms": 10000,
+    "chars_in_shot": [
+      "挖山现场",
+      "愚公",
+      "YuGong"
+    ],
+    "scenes_in_shot": [
+      "Mountain_Slope"
+    ],
+    "dialogues_in_shot": [],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，角色造型偏卡通化，场景宏大壮丽。参考图绑定：角色参考图@YuGong，场景参考图@Mountain_Slope。摄像机固定不动，保持一个稳定的中景镜头。@愚公 始终站在画面中心偏下的位置，一次次地举起和挥下镐头，敲击岩石<持续的镐头敲击声>。画面通过叠化（dissolve）切换四个季节的场景：春天，背景的树枝发芽<风声>；叠化到夏天，树叶茂密，@愚公 脸上汗水更多；叠化到秋天，黄叶飘落；叠化到冬天，雪花飘落<雪声>，@愚公 披上了蓑衣。@愚公 的动作始终保持不变的节奏。无角色口型对白，旁白由独立音轨负责。no music, no subtitles, no text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_06": {
+    "prompt": "摄像机从 @智叟 左肩后方过肩取景，@智叟 后脑与肩膀占据画面左侧前景，视线投向右侧正在挖山的 @愚公，@智叟 嘴角微动，发出一声冷笑，说：{你这样做太不聪明了，凭你这有限的精力，又怎能把这两座山挖平呢？} 切至 @愚公 的过肩镜头，他停下动作，直起腰，缓缓转身，直视 @智叟，眼神平静但坚定，说：{你这个人太顽固了，简直无法开导，即使我死了，还有我的儿子在这里。儿子死了，还有孙子，孙子又生孩子，孩子又生儿子。子子孙孙是没有穷尽的，而山却不会再增高，为什么挖不平呢？} 在 @愚公 说话时，摄像机从固定中景缓慢推近至近景，压缩他与背景山体的空间距离，强调他表情中逐渐凝聚的信念感。智叟坚定的说“你这样做太不聪明了，凭你这有限的精力，又怎能把这两座山挖平呢？<br>@愚公：你这个人太顽固了，简直无法开导，即使我死了，还有我的儿子在这里。儿子死了，还有孙子，孙子又生孩子，孩子又生儿子。子子孙孙是没有穷尽的，而山却不会再增高，为什么挖不平呢？”。no music, no subtitles, no text overlay",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片15.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片4.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片7.png"
+    ],
+    "duration_ms": 12000,
+    "chars_in_shot": [
+      "挖山现场",
+      "愚公",
+      "智叟",
+      "YuGong",
+      "ZhiSou"
+    ],
+    "scenes_in_shot": [
+      "Mountain_Slope"
+    ],
+    "dialogues_in_shot": [
+      {
+        "speaker": "智叟",
+        "line": "你这样做太不聪明了，凭你这有限的精力，又怎能把这两座山挖平呢？<br>@愚公：你这个人太顽固了，简直无法开导，即使我死了，还有我的儿子在这里。儿子死了，还有孙子，孙子又生孩子，孩子又生儿子。子子孙孙是没有穷尽的，而山却不会再增高，为什么挖不平呢？",
+        "cue": "智叟坚定的说“你这样做太不聪明了，凭你这有限的精力，又怎能把这两座山挖平呢？<br>@愚公：你这个人太顽固了，简直无法开导，即使我死了，还有我的儿子在这里。儿子死了，还有孙子，孙子又生孩子，孩子又生儿子。子子孙孙是没有穷尽的，而山却不会再增高，为什么挖不平呢？”"
+      }
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，角色造型偏卡通化，表情细腻。参考图绑定：角色参考图@YuGong，角色参考图@ZhiSou，场景参考图@Mountain_Slope。镜头1：@智叟 的过肩镜头，他站在前景，后脑勺和肩膀占据画面左侧，看着正在挖山的 @愚公，冷笑一声说：{你这样做太不聪明了，凭你这有限的精力，又怎能把这两座山挖平呢？} 镜头2：切至 @愚公 的过肩镜头，他停下动作，直起腰，缓缓转身，直视 @智叟，眼神平静但坚定地说：{你这个人太顽固了，简直无法开导，即使我死了，还有我的儿子在这里。儿子死了，还有孙子，孙子又生孩子，孩子又生儿子。子子孙孙是没有穷尽的，而山却不会再增高，为什么挖不平呢？} 在 @愚公 说话时，镜头微微推近，强调他表情中的信念感。no music, no subtitles, no text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_07": {
+    "prompt": "摄像机从中景开始，@智叟 被 @愚公 的话震住，张了张嘴说不出话，然后摇了摇头，拄着拐杖，灰溜溜地转身离开<拐杖敲击地面的声音>。@愚公 看着他远去的背影，深深吸了一口气，然后重新举起镐头，继续挖山。在 @愚公 开始挖山的同时，摄像机缓慢向后拉远，将正在远离的 @智叟 和正在劳作的 @愚公 以及背后的大山都纳入画面。@智叟 的身影在画面中越来越小，而 @愚公 和 @太行山与王屋山 则占据了画面的主体。无角色口型对白。no music, no subtitles, no text overlay",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片15.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片4.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片7.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片13.png"
+    ],
+    "duration_ms": 8000,
+    "chars_in_shot": [
+      "挖山现场",
+      "愚公",
+      "智叟",
+      "YuGong",
+      "ZhiSou"
+    ],
+    "scenes_in_shot": [
+      "Mountain_Slope",
+      "太行山与王屋山"
+    ],
+    "dialogues_in_shot": [],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，角色造型偏卡通化。参考图绑定：角色参考图@YuGong，角色参考图@ZhiSou，场景参考图@Mountain_Slope。摄像机从中景开始，@智叟 被 @愚公 的话震住，张了张嘴，说不出话，然后摇了摇头，拄着拐杖，灰溜溜地转身离开<拐杖敲击地面的声音>。@愚公 看着他远去的背影，深深地吸了一口气，然后重新举起镐头，继续挖山。在 @愚公 开始挖山的同时，摄像机缓慢向后拉远，将正在远离的 @智叟 和正在劳作的 @愚公 以及背后的大山都纳入画面。@智叟 的身影在画面中越来越小，而 @愚公 和 @太行山与王屋山 则占据了画面的主体。无角色口型对白。no music, no subtitles, no text overlay\n\n第二幕：神助之愿",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_08": {
+    "prompt": "摄像机从金色云雾特写开始，缓慢横向移动，逐渐揭示云雾后宏伟壮丽的 @天宫。切中景，@山神 半透明巨大灵体身影出现在 @天帝 宝座前，躬身禀报：{陛下，人间的愚公带领子孙，日日挖山不止，其志可嘉，其行感人。} 切 @天帝 正面特写，他睁开威严双眼，声音宏大地说：{此人之精神，当为天下之楷模。传我旨意，命大力神下凡，助他移山。}。山神说“陛下，人间的愚公带领子孙，日日挖山不止，其志可嘉，其行感人。<br>@天帝：此人之精神，当为天下之楷模。传我旨意，命大力神下凡，助他移山。”。",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片12.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片3.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片2.png"
+    ],
+    "duration_ms": 10000,
+    "chars_in_shot": [
+      "天宫",
+      "山神",
+      "天帝"
+    ],
+    "scenes_in_shot": [
+      "Mountain_God",
+      "Heavenly_Emperor",
+      "Cloud_Palace"
+    ],
+    "dialogues_in_shot": [
+      {
+        "speaker": "山神",
+        "line": "陛下，人间的愚公带领子孙，日日挖山不止，其志可嘉，其行感人。<br>@天帝：此人之精神，当为天下之楷模。传我旨意，命大力神下凡，助他移山。",
+        "cue": "山神说“陛下，人间的愚公带领子孙，日日挖山不止，其志可嘉，其行感人。<br>@天帝：此人之精神，当为天下之楷模。传我旨意，命大力神下凡，助他移山。”"
+      }
+    ],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，场景宏大壮丽，光影柔和神圣。参考图绑定：角色参考图@Mountain_God，角色参考图@Heavenly_Emperor，场景参考图@Cloud_Palace。镜头1（0-3秒）：摄像机从一片金色云雾的特写开始，缓慢地横向移动（pan），逐渐揭示出云雾之后宏伟壮丽的 @天宫。镜头2（3-7秒）：切到中景，@山神 半透明的巨大灵体身影出现在 @天帝 的宝座前，躬身禀报：{陛下，人间的愚公带领子孙，日日挖山不止，其志可嘉，其行感人。} 镜头3（7-10秒）：切到 @天帝 的正面特写，他睁开威严的双眼，声音宏大地说：{此人之精神，当为天下之楷模。传我旨意，命大力神下凡，助他移山。} 整个镜头序列通过剪辑完成，节奏清晰。no music, no subtitles, no text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_09": {
+    "prompt": "摄像机从远景开始，缓慢平稳地环绕拍摄。两个身形巨大的 @大力神 从天而降，落在 @太行山与王屋山 两侧。他们弯下腰，将双手插入山底，大吼一声，<大力神的吼声>，竟将整座大山扛在肩上。山体发出<山崩地裂的巨响>，碎石滚落。然后，他们迈开沉重的步伐，向远方走去，每一步都伴随着<沉重的脚步声>。摄像机始终保持着缓慢的环绕运动，让观众从不同的角度欣赏这一奇迹。no music, no subtitles, no text overlay",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片13.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片1.png"
+    ],
+    "duration_ms": 12000,
+    "chars_in_shot": [
+      "大力神"
+    ],
+    "scenes_in_shot": [
+      "太行山与王屋山",
+      "God_Of_Strength",
+      "TaiHang_WangWu_Mountains"
+    ],
+    "dialogues_in_shot": [],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，场景宏大壮丽，光影神圣。参考图绑定：角色参考图@God_Of_Strength，场景参考图@TaiHang_WangWu_Mountains。摄像机从远景开始，缓慢地、平稳地环绕（orbit）拍摄。两个身形巨大的 @大力神 从天而降，落在 @太行山与王屋山 两侧。他们弯下腰，将双手插入山底，大吼一声，<大力神的吼声>，竟将整座大山扛在肩上。山体发出<山崩地裂的巨响>，碎石滚落。然后，他们迈开沉重的步伐，向远方走去，每一步都伴随着<沉重的脚步声>。摄像机始终保持着缓慢的环绕运动，让观众从不同的角度欣赏这一奇迹。无角色口型对白，旁白由独立音轨负责。no music, no subtitles, no text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  },
+  "shot_10": {
+    "prompt": "摄像机从家庭远景缓慢前推，@愚公 站在家人中间，望向宽阔平坦直通远方的大道，眼中泛起泪光。他缓缓深吸一口气，转身看向家人，露出满足欣慰的笑容。@愚公妻子 和 @愚公子孙 们围拢过来，与 @愚公 拥抱在一起。在家人拥抱的同时，摄像机继续向前推近，最终定格在 @愚公 脸部特写，他眼角的皱纹里充满笑意。no music, no subtitles, no text overlay",
+    "reference_image_paths": [
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片16.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片4.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片5.png",
+      "G:/AICoding/manga-pipeline/outputs/20260526_070533_9754/images/img_图片6.png"
+    ],
+    "duration_ms": 12000,
+    "chars_in_shot": [
+      "愚公",
+      "愚公妻子",
+      "愚公子孙",
+      "YuGong"
+    ],
+    "scenes_in_shot": [
+      "新开的大道",
+      "YuGong_Wife",
+      "YuGong_Children",
+      "Final_Road"
+    ],
+    "dialogues_in_shot": [],
+    "style": "",
+    "i2v_source": "迪士尼风格，色彩明亮温暖，场景宏大壮丽，光影柔和希望。参考图绑定：角色参考图@YuGong，角色参考图@YuGong_Wife，角色参考图@YuGong_Children，场景参考图@Final_Road。摄像机从家庭的远景开始，缓慢而温柔地向他们推近。@愚公 站在家人中间，望着眼前这条宽阔平坦、直通远方的大道，眼中泛起了泪光。他缓缓地、深深地吸了一口气，然后转身，看向自己的家人，露出了一个满足而欣慰的笑容。@愚公妻子 和 @愚公子孙 们也围过来，与 @愚公 拥抱在一起。在家人拥抱的同时，摄像机继续向前推近，最终定格在 @愚公 的脸部特写上，他眼角的皱纹里充满了笑意。无角色口型对白，旁白由独立音轨负责。no music, no subtitles, no text overlay",
+    "duration_source": "header",
+    "prompt_source": "step06_polish",
+    "manual_reference_image_paths": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "prompts": {
+    "step_01_script.system": {
+      "description": "Step 1 script brief generation system prompt.",
+      "enabled": true,
+      "env_path_key": "STEP01_SCRIPT_SYSTEM_PROMPT_FILE",
+      "relative_filename": "step_01/_base.txt",
+      "style_dir": "step_01/styles"
+    },
+    "step_02_storyboard.system": {
+      "description": "Step 2 storyboard and asset text-to-image prompt generation system prompt.",
+      "enabled": true,
+      "env_path_key": "STEP02_STORYBOARD_SYSTEM_PROMPT_FILE",
+      "relative_filename": "step_02_script_system.txt"
+    },
+    "step_02_asset_catalog.system": {
+      "description": "Step 2 asset catalog extraction system prompt.",
+      "enabled": true,
+      "env_path_key": "STEP02_ASSET_CATALOG_SYSTEM_PROMPT_FILE",
+      "relative_filename": "step_04_extract_assets_system.txt"
+    },
+    "step_02_asset_image.system": {
+      "description": "Step 2 asset text-to-image prompt system prompt.",
+      "enabled": true,
+      "env_path_key": "STEP02_ASSET_IMAGE_SYSTEM_PROMPT_FILE",
+      "relative_filename": "step_04_img_single_system.txt"
+    },
+    "step_04_video.system": {
+      "description": "Step 4 Seedance 2.0 video prompt polish system prompt.",
+      "enabled": true,
+      "env_path_key": "STEP04_VIDEO_SYSTEM_PROMPT_FILE",
+      "relative_filename": "step_06_i2v_polish_system.txt"
+    }
+  }
+}

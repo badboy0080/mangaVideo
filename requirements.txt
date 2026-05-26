@@ -1,0 +1,14 @@
+# 漫剧生成流水线 - 依赖
+# pip install -r requirements.txt
+
+# 核心依赖
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# 控制台 Web API
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+
+# 视频处理（ffmpeg 需要单独安装）
+# Ubuntu/WSL: sudo apt install ffmpeg
+# Windows: 下载 ffmpeg 并加入 PATH

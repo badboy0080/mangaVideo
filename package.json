@@ -1,0 +1,22 @@
+{
+  "name": "manga-pipeline",
+  "version": "1.0.0",
+  "description": "输入主题 → 自动研究 → 生成分镜脚本 → 提取图片资产 → 文生图 → 图生视频 → 视频拼接 → 最终 MP4",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "mmx": "mmx",
+    "mmx:login": "mmx auth login",
+    "mmx:status": "mmx auth status"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "mmx-cli": "^1.0.13"
+  }
+}

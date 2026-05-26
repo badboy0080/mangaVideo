@@ -1,0 +1,41 @@
+{
+  "model_hint": "doubao-seedream-4-5-251128",
+  "size": "2K",
+  "presets": [
+    {
+      "id": "movie",
+      "style": "电影短片",
+      "prompt": "Cinematic film still thumbnail, dramatic character silhouette, shallow depth of field, teal and orange grading, widescreen mood, no text, no watermark"
+    },
+    {
+      "id": "brand",
+      "style": "品牌广告",
+      "prompt": "Premium brand commercial key visual, clean studio lighting, minimal composition, glossy product hero feel, modern advertising photography, no text"
+    },
+    {
+      "id": "anime",
+      "style": "动画叙事",
+      "prompt": "Stylized anime narrative scene, expressive character pose, vibrant cel-shaded colors, dynamic composition, storyboard keyframe mood, no text"
+    },
+    {
+      "id": "gamecg",
+      "style": "游戏CG",
+      "prompt": "Game cinematic CG trailer frame, epic fantasy armor and magic glow, high detail render, dramatic rim light, no UI, no text"
+    },
+    {
+      "id": "scifi",
+      "style": "科幻短片",
+      "prompt": "Sci-fi short film concept art frame, futuristic city neon, holographic accents, cinematic wide shot, cool blue atmosphere, no text"
+    },
+    {
+      "id": "doc",
+      "style": "纪录片风格",
+      "prompt": "Documentary style observational frame, natural daylight, handheld realism, muted color grade, human subject in environment, no text"
+    },
+    {
+      "id": "mv",
+      "style": "MV",
+      "prompt": "Music video style vibrant frame, bold color blocking, rhythmic motion blur accents, fashion editorial lighting, no text"
+    }
+  ]
+}

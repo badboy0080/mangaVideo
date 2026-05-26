@@ -1,0 +1,49 @@
+{
+  "run_id": "20260525_115312_d1da",
+  "out_dir": "outputs/20260525_115312_d1da",
+  "topic": "迪士尼风格，成语故事典故：破釜沉舟",
+  "duration": 120,
+  "style": "电影短片",
+  "img_concurrency": 5,
+  "video_concurrency": 3,
+  "created_at": "2026-05-25T03:53:12.223820Z",
+  "steps": {
+    "1": {
+      "key": "script_brief",
+      "title": "剧本",
+      "status": "success",
+      "error": null,
+      "updated_at": "2026-05-25T03:53:44.787604Z"
+    },
+    "2": {
+      "key": "storyboard",
+      "title": "分镜",
+      "status": "success",
+      "error": null,
+      "updated_at": "2026-05-25T04:01:20.258734Z"
+    },
+    "3": {
+      "key": "gen_assets",
+      "title": "资产",
+      "status": "success",
+      "error": null,
+      "updated_at": "2026-05-25T06:51:36.651125Z"
+    },
+    "4": {
+      "key": "gen_videos",
+      "title": "视频",
+      "status": "success",
+      "error": null,
+      "updated_at": "2026-05-25T09:26:11.983675Z"
+    },
+    "5": {
+      "key": "concat",
+      "title": "成片",
+      "status": "success",
+      "error": null,
+      "updated_at": "2026-05-25T15:06:49.801937Z"
+    }
+  },
+  "last_global_error": null,
+  "final_mp4": "G:/AICoding/manga-pipeline/outputs/20260525_115312_d1da/final.mp4"
+}

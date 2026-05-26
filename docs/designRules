@@ -1,0 +1,207 @@
+Flova.ai 设计规范文档
+基于首页截图逆向分析，版本 v1.0 · 2026-05-20
+
+1. 设计语言总结
+关键词：暗黑极简 · 工业冷感 · 内容优先 · 环境光渲染 · 无边界分层
+
+整体风格与 Linear / Vercel / Notion 同属「冷调 SaaS 暗黑设计系」，但引入了电影感的环境光背景和更强的内容密度。核心思路是：用面的明度差异（而非线条/边框）来区分层级，所有组件悬浮在一个有深度的暗色平面上，轻描边或无描边。
+
+2. 配色系统
+2.1 背景色阶（Background）
+层级	用途	估算值
+bg-base	全局最底层背景	oklch(0.10 0.01 260) ≈ #0d0d12
+bg-ambient	顶部渐变极光环境光	紫蓝-靛蓝 径向渐变，覆盖视口上半
+bg-card	卡片/容器浮层	oklch(0.15 0.01 260) ≈ #181820
+bg-card-hover	卡片 Hover 态	在 base 基础上亮约 5%
+bg-input	Textarea/输入框背景	oklch(0.18 0.01 270) ≈ #1e1e28 带描边
+bg-sidebar	左侧导航栏	同 base，更深，约 #0a0a0f
+2.2 文字色阶（Text）
+层级	用途	估算值
+text-primary	主标题、卡片标题	#e8e8ee（接近纯白，略暖）
+text-secondary	副文案、描述、时间戳	#8888aa（蓝灰色调）
+text-muted	占位符、禁用、边注	#4a4a66
+text-accent-nav	激活导航图标	#ffffff
+text-accent-cta	CTA 高亮文字	#fbbf24（金黄，对应顶栏 CTA 按钮）
+2.3 强调色（Accent）
+Token	颜色	使用场景
+accent-amber	#f59e0b / #fbbf24	顶栏 CTA 招募按钮、积分 badge
+accent-violet	#7c3aed → #a78bfa	环境光渐变、聚焦发光
+accent-indigo	#4338ca → #6366f1	背景极光渐变右侧
+accent-green	#10b981	服务状态指示灯（成功/在线）
+accent-red	#ef4444	错误、停止按钮、失败状态
+2.4 描边与分割线
+Token	用途	值
+border-default	输入框、卡片轮廓	rgba(255,255,255,0.07)（极低透明白）
+border-none	大部分卡片	无描边，纯面差分层
+separator	内容分区横线	rgba(255,255,255,0.05)
+3. 字体系统
+3.1 字体家族
+
+主字体（中英混排）：Geist Sans / Inter
+等宽字体（ID/路径）：Geist Mono
+备用系统字体：-apple-system, BlinkMacSystemFont, "Segoe UI"
+页面中文使用操作系统中文字体自动 fallback，基本为 PingFang SC / Microsoft YaHei。
+
+3.2 字号阶梯
+层级	场景	大小	字重	行高
+text-hero	顶部背景虚化大标题	clamp(1.6rem, 3vw, 2.4rem)	700	1.2
+text-section	区块标题「最近项目」「热门 Skills」	1.25rem（20px）	700	1.3
+text-card-title	卡片主标题	0.875rem（14px）	600	1.4
+text-card-desc	卡片副描述	0.75rem（12px）	400	1.5
+text-meta	时间戳、小标注	0.6875rem（11px）	400	1.4
+text-label	导航标签、按钮内文字	0.625rem（10px）	500	1.2
+text-badge	胶囊 badge、状态标签	0.6875rem（11px）	600	1
+3.3 字间距（Letter Spacing）
+使用场景	值
+大标题	tracking-tight（-0.01em）
+区块标题	tracking-normal（0）
+导航图标标签	tracking-wide（0.05em）
+小型大写标注	tracking-[0.15em]（微标注）
+4. 间距系统
+以 4px 为基准单位（--spacing-unit: 4px）
+
+Token	值	典型用途
+space-1	4px	图标与文字的最小间距
+space-2	8px	标签内 padding，行内元素间距
+space-3	12px	卡片内部次级间距
+space-4	16px	卡片 padding、导航 padding
+space-6	24px	区块间标准间距
+space-8	32px	大区块间距（如热门 Skills 与最近项目间）
+space-12	48px	顶栏到正文区间距
+space-16	64px	超大页面分区间距
+5. 圆角系统（Border Radius）
+Token	值	使用场景
+rounded-sm	4px	极小 badge、状态点
+rounded	6px	小按钮、标签
+rounded-md	8px	输入控件、下拉选项
+rounded-lg	12px	一般卡片
+rounded-xl	16px	内容卡片（Skills、项目卡）
+rounded-2xl	20px	大容器、主输入框
+rounded-full	9999px	圆形头像、状态灯、胶囊 badge
+6. 组件规范
+6.1 导航栏（Left Sidebar）
+宽度：约 52px，极度压缩
+结构：图标居中，图标下方 10px 文字标签
+激活态：图标+标签变为纯白 #ffffff，无背景高亮块
+未激活态：图标+标签为 #4a4a66（muted）
+Logo：左上角 Flova.ai，橙红色 F 图标 + 白色品牌名
+6.2 主输入框（Composer）
+背景：深色半透明，与页面 bg-card 同色阶
+边框：极细 1px solid rgba(255,255,255,0.08)
+圆角：20px（rounded-2xl）
+内部控件：底部工具栏，+ 添加 / 模型选择胶囊 / Skill 选择 / 元素选择 / 右侧发送箭头
+占位文字：#4a4a66，由一个想法或故事开始...
+发送按钮：右下角圆形，bg-white text-black，向上箭头图标
+6.3 胶囊标签（Pill Badge）
+
+背景：rgba(255,255,255,0.08) — 半透明磨砂
+边框：1px solid rgba(255,255,255,0.10)
+文字：text-secondary (#8888aa)
+内 padding：4px 10px
+圆角：full
+字号：11px / 600
+激活态（如"模型"绿点激活）：左侧附绿色指示点 ●
+
+6.4 内容卡片（Skill Card / Project Card）
+
+背景：bg-card（约 #181820），无描边
+圆角：16px
+图片区：占卡片上半，object-cover，圆角顶部裁切
+标题：14px / 600 / text-primary
+描述：12px / 400 / text-secondary，2 行截断
+Hover 态：
+
+轻微上浮 translateY(-2px)
+可选：图片区缩放 scale(1.03)
+标题颜色提亮至 #ffffff
+6.5 顶栏 CTA 按钮（FlovaSkill 招募）
+
+背景：线性渐变 amber→gold
+文字：#000000（黑色，保证对比度）
+图标：🌟 emoji 左侧
+圆角：full
+字重：600
+6.6 积分/Free 角标
+
+样式：`🪙 180 Free`
+背景：bg-card
+圆角：full
+右侧：用户头像圆形 40px
+7. 顶部背景环境光（Ambient Glow）
+这是 Flova.ai 视觉语言中最具标志性的元素。
+
+css
+
+/* 顶部极光环境光 */
+background:
+  radial-gradient(ellipse 80% 50% at 50% -10%,
+    oklch(0.45 0.20 280 / 0.35) 0%,   /* 紫色核心 */
+    oklch(0.35 0.15 260 / 0.20) 40%,  /* 靛蓝过渡 */
+    transparent 70%
+  ),
+  oklch(0.10 0.01 260);  /* 基底深黑 */
+效果特征：
+
+颜色从顶部向下逐渐消散为深黑
+中心偏紫-靛，边缘无色
+不做硬边，完全软渐变融合
+8. 布局结构
+
+┌─────┬──────────────────────────────────┬───────────────┐
+│ 52  │           主内容区                │  (无右侧栏)   │
+│ px  │  max-width: 约 1200px            │               │
+│ 侧栏│  padding: 0 32px                 │               │
+│     │                                  │               │
+│     │  ┌──── 顶栏/CTA ──────────────┐  │               │
+│     │  │ Flova.ai logo    右侧badges │  │               │
+│     │  └────────────────────────────┘  │               │
+│     │  ┌──── Composer 输入框 ────────┐  │               │
+│     │  │                            │  │               │
+│     │  └────────────────────────────┘  │               │
+│     │  ── 热门 Skills（横向滚动卡片）──  │               │
+│     │  ── 最近项目（4列卡片网格）──────  │               │
+│     │  ── FlovaTV（分类频道）──────────  │               │
+└─────┴──────────────────────────────────┴───────────────┘
+9. 动效规范
+场景	动画	时长	缓动
+卡片 hover 上浮	translateY(-2px)	200ms	ease-out
+图片缩放	scale(1.03)	300ms	ease-out
+颜色/透明度过渡	opacity, color	150ms	ease
+顶部背景光	微弱 pulse 呼吸	6s	ease-in-out infinite
+状态指示灯	animate-pulse	2s	ease-in-out infinite
+图标 active 切换	颜色渐变	100ms	linear
+10. 暗黑模式优先原则
+Flova.ai 是**纯暗黑模式（Dark-only）**产品，没有亮色主题切换。设计决策基础：
+
+对比度最低可读标准：正文文字与背景对比度 ≥ 4.5:1（WCAG AA）
+避免纯白：最亮文字为 #e8e8ee，而非 #ffffff，降低视觉刺激
+发光代替阴影：使用 box-shadow: 0 0 Xpx color 正发光代替传统下投影
+层级无边框化：背景明度差 5-8% 即可区分层级，不用 1px 线
+附：核心 CSS 变量速查
+css
+
+:root {
+  /* 背景 */
+  --bg-base: oklch(0.10 0.01 260);
+  --bg-card: oklch(0.15 0.01 260);
+  --bg-input: oklch(0.18 0.01 270);
+  --bg-sidebar: oklch(0.08 0.01 260);
+  /* 文字 */
+  --text-primary: #e8e8ee;
+  --text-secondary: #8888aa;
+  --text-muted: #4a4a66;
+  /* 强调 */
+  --accent-amber: #f59e0b;
+  --accent-violet: #7c3aed;
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  /* 描边 */
+  --border-soft: rgba(255, 255, 255, 0.07);
+  /* 圆角 */
+  --radius-card: 16px;
+  --radius-input: 20px;
+  --radius-pill: 9999px;
+  /* 字体 */
+  --font-sans: "Geist", "Inter", system-ui, sans-serif;
+  --font-mono: "Geist Mono", monospace;
+}

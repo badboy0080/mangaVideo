@@ -1,0 +1,50 @@
+# Tasks
+
+- [ ] Task 1: 重构 Step 01（剧本纲要）— 新增管道角色、入参、出参小节
+  - [ ] SubTask 1.1: 在 Role 描述之后新增「## 管道阶段 (Pipeline Stage)」小节
+  - [ ] SubTask 1.2: 将原有的散落入参信息整理为「## 入参 (Input)」小节，列出字段名、类型、必填/可选、说明
+  - [ ] SubTask 1.3: 新增「## 出参 (Output)」小节，描述 creative_brief 的输出结构（标题、核心概念、故事结构、正文剧本、人物与场景清单、Visual Style Summary）
+  - [ ] SubTask 1.4: 保持「Output Constraint」不动，仅在其之前插入新小节
+- [ ] Task 2: 重构 Step 02（分镜脚本）— 新增管道角色、入参、出参小节
+  - [ ] SubTask 2.1: 新增「## 管道阶段 (Pipeline Stage)」声明（对应 promptGuild §2 故事板设计）
+  - [ ] SubTask 2.2: 将现有开头的「输入是 Step 1...」改写为结构化「## 入参 (Input)」小节
+  - [ ] SubTask 2.3: 新增「## 出参 (Output)」小节，含分镜输出结构示例（标题行+表格+T2V正文+I2V正文）
+  - [ ] SubTask 2.4: 现有格式规则 A～J 保持不动
+- [ ] Task 3: 重构 Step 04_extract_assets（资产提取）— 新增管道角色、入参、出参，删除重复骨架
+  - [ ] SubTask 3.1: 新增「## 管道阶段 (Pipeline Stage)」声明
+  - [ ] SubTask 3.2: 将现有「## 输入」改写为「## 入参 (Input)」小节，增加字段表
+  - [ ] SubTask 3.3: 新增「## 出参 (Output)」小节，包含完整 JSON Schema
+  - [ ] SubTask 3.4: 删除第 37～52 行重复的三段式骨架内容，改为一句引用「description 字段需符合 step_04_img_single 的三段式骨架标准」
+- [ ] Task 4: 重构 Step 04_img_single（单资产文生图）— 新增管道角色、入参、出参小节
+  - [ ] SubTask 4.1: 新增「## 管道阶段 (Pipeline Stage)」声明
+  - [ ] SubTask 4.2: 将现有「## Input Format」改写为「## 入参 (Input)」小节，增加字段表（资产名称、类型、描述文本）
+  - [ ] SubTask 4.3: 新增「## 出参 (Output)」小节，描述输出为 180～400 字的中文 T2I 提示词纯文本
+  - [ ] SubTask 4.4: 三段式骨架标准保留不动
+- [ ] Task 5: 重构 Step 04_refine_shots（分镜关键帧精修）— 新增管道角色、入参、出参小节
+  - [ ] SubTask 5.1: 新增「## 管道阶段 (Pipeline Stage)」声明
+  - [ ] SubTask 5.2: 将现有「## Input Data Schema」改写为「## 入参 (Input)」小节，增加字段表
+  - [ ] SubTask 5.3: 将现有「## Output Schema Example」扩展为「## 出参 (Output)」小节，增加字段说明表
+  - [ ] SubTask 5.4: 保留现有 Execution Rules 和 Output Constraint
+- [ ] Task 6: 重构 Step 06（I2V 润色）— 新增管道角色、入参、出参小节
+  - [ ] SubTask 6.1: 新增「## 管道阶段 (Pipeline Stage)」声明
+  - [ ] SubTask 6.2: 将现有「## Input Schema」改写为「## 入参 (Input)」小节，增加字段表
+  - [ ] SubTask 6.3: 新增「## 出参 (Output)」小节，描述输出为润色后的视频提示词纯文本
+  - [ ] SubTask 6.4: 保留现有 Execution Rules 和 Output Constraint
+- [ ] Task 7: 创建 Step 03（视频规格）系统提示词文档
+  - [ ] SubTask 7.1: 创建 `prompts/step_03_video_spec_system.txt`
+  - [ ] SubTask 7.2: 包含 Role、管道阶段、入参（Step 01 输出的 creative_brief）、出参（Final_Video_Spec 结构化文本）、Execution Rules、Output Constraint
+- [ ] Task 8: 创建 Step 05（镜头视频生成）系统提示词文档
+  - [ ] SubTask 8.1: 创建 `prompts/step_05_shot_video_system.txt`
+  - [ ] SubTask 8.2: 包含 Role、管道阶段、入参（Step 02 分镜 + Step 04 元素图引用）、出参（Seedance 视频提示词，含包装符）、Execution Rules（参照 promptGuild §4.3 的 Seedance 叙事顺序）、Output Constraint
+- [ ] Task 9: 更新 promptGuild 文档 — 新增管道映射表
+  - [ ] SubTask 9.1: 在 docs/promptGuild 的 §1.1 阶段流程之后新增 §1.4「Step 文件与管道阶段映射表」
+  - [ ] SubTask 9.2: 表格列出：Step 文件名 | 管道阶段编号 | 职责 | 上游依赖 | 下游消费者
+
+# Task Dependencies
+- Task 2 依赖 Task 1（Step 02 入参引用 Step 01 输出）
+- Task 3、Task 4、Task 5 相互独立，可并行
+- Task 4 依赖 Task 3 完成 extract_assets 的清理（引用关系）
+- Task 6 依赖 Task 2（Step 06 入参来自 Step 02）
+- Task 7 依赖 Task 1（Step 03 入参来自 Step 01）
+- Task 8 依赖 Task 2、Task 4（Step 05 入参来自 Step 02 分镜和 Step 04 资产）
+- Task 9 依赖 Task 1～8 全部完成（汇总映射关系）

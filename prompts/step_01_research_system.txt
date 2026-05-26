@@ -1,0 +1,8 @@
+# 已迁移 — 请勿直接编辑本文件
+#
+# Step 1 提示词现由以下文件组成（运行时按「风格类型」拼接）：
+#   prompts/step_01/_base.txt
+#   prompts/step_01/styles/{风格类型}.txt
+#
+# 合法风格：电影短片 | 品牌广告 | 动画叙事 | 游戏CG | MV | 科幻短片 | 纪录片风格
+# 加载逻辑见 steps/step_01_research.py
