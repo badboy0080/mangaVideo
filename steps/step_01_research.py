@@ -67,7 +67,14 @@ def load_step01_system_prompt(style: str) -> str:
     return f"{base}\n\n---\n\n# 风格专章\n\n{style_part}"
 
 
-def run(topic: str, duration_seconds: int = 90, style: str = "电影短片") -> dict:
+def run(
+    topic: str,
+    duration_seconds: int = 90,
+    style: str = "电影短片",
+    *,
+    revision_prompt: str = "",
+    previous_output: str = "",
+) -> dict:
     """
     返回 dict（写入 research.json），包含:
       - topic, duration_seconds, style（规范名）
@@ -84,6 +91,20 @@ def run(topic: str, duration_seconds: int = 90, style: str = "电影短片") -> 
         f"风格类型：{style_key}\n"
         f"时长（秒）：{duration_s}"
     )
+    if revision_prompt.strip():
+        user_prompt += (
+            "\n\n# 审核返工要求\n"
+            "上一次 Step01 输出没有通过审核。请在保持主题、风格、时长和用户事实不变的前提下重写完整 Step01 正文。\n"
+            f"{revision_prompt.strip()}"
+        )
+    if previous_output.strip():
+        user_prompt += (
+            "\n\n# 上一次未通过审核的输出\n"
+            "仅用于定位问题，不要原样照抄其中的错误。\n"
+            "----- PREVIOUS STEP01 OUTPUT START -----\n"
+            f"{previous_output.strip()}\n"
+            "----- PREVIOUS STEP01 OUTPUT END -----"
+        )
 
     system_prompt = load_step01_system_prompt(style_key)
 

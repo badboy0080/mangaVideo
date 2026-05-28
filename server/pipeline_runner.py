@@ -1,4 +1,4 @@
-"""Pipeline step runner and UI state for the 5-step workflow."""
+"""Pipeline step runner and UI state for the 6-step workflow."""
 from __future__ import annotations
 
 import contextlib
@@ -29,8 +29,17 @@ STEP_LABELS: list[tuple[int, str, str, str]] = [
     (3, "gen_assets", "资产", "steps.step_03_generate_assets"),
     (4, "gen_videos", "视频", "steps.step_04_generate_videos"),
     (5, "concat", "成片", "steps.step_08_concat"),
+    (6, "cover", "封面", "steps.step_09_generate_cover"),
 ]
 STEP_COUNT = len(STEP_LABELS)
+STEP_DEPENDENCIES: dict[int, list[int]] = {
+    1: [],
+    2: [1],
+    3: [2],
+    4: [3],
+    5: [4],
+    6: [1],
+}
 
 _run_locks: dict[str, threading.Lock] = {}
 _locks_guard = threading.Lock()
@@ -164,7 +173,10 @@ def load_state(out_dir: str) -> dict[str, Any]:
     if not sp.is_file():
         raise FileNotFoundError(str(sp))
     with open(sp, encoding="utf-8") as f:
-        return json.load(f)
+        state = json.load(f)
+    if _mark_stale_running_steps(state):
+        save_state(out_dir, state)
+    return state
 
 
 def save_state(out_dir: str, state: dict[str, Any]) -> None:
@@ -324,6 +336,10 @@ def _require_steps(state: dict[str, Any], required: list[int]) -> None:
         raise RuntimeError(f"Complete steps first: {', '.join(missing)}")
 
 
+def _required_steps_for_step(step: int) -> list[int]:
+    return STEP_DEPENDENCIES.get(step, list(range(1, step)))
+
+
 def preflight_run_step(out_dir: str, step: int, force: bool) -> None:
     state = load_state(out_dir)
     if _mark_stale_running_steps(state):
@@ -335,7 +351,7 @@ def preflight_run_step(out_dir: str, step: int, force: bool) -> None:
         raise RuntimeError("Step is already running")
     if cur.get("status") == "success" and not force:
         raise RuntimeError("Step already success; pass force=true to redo")
-    _require_steps(state, list(range(1, step)))
+    _require_steps(state, _required_steps_for_step(step))
 
 
 def _mark_step(state: dict[str, Any], out_dir: str, step: int, status: str, error: str | None = None) -> None:
@@ -378,60 +394,60 @@ def execute_step(out_dir: str, step: int, *, force: bool = False) -> dict[str, A
                 with contextlib.redirect_stdout(tee_out), contextlib.redirect_stderr(tee_err):
                     try:
                         if step == 1:
-                            from steps.step_01_research import run as s1
+                            from agents.research_agent import ResearchAgent
 
-                            brief = s1(state["topic"], duration_seconds=int(state.get("duration") or 90), style=state.get("style") or "电影短片")
-                            _write_json(d, "script_brief.json", brief)
-                            _write_json(d, "research.json", brief)
+                            agent = ResearchAgent()
+                            brief = agent.run(
+                                topic=state["topic"],
+                                duration=int(state.get("duration") or 90),
+                                style=state.get("style") or "电影短片",
+                                out_dir=d_out,
+                            )
                         elif step == 2:
                             _require_steps(state, [1])
-                            from db import init as db_init, save_run
-                            from steps.step_02_storyboard import run as s2
+                            from agents.storyboard_agent import StoryboardAgent
 
-                            brief = _read_json(d, "script_brief.json")
-                            storyboard = s2(state["topic"], brief, d_out, target_duration=int(state.get("duration") or 90))
-                            _write_json(d, "storyboard.json", storyboard)
-                            (d / "script.md").write_text(storyboard.get("script") or "", encoding="utf-8")
-                            conn = db_init(db_path)
-                            try:
-                                save_run(conn, state["run_id"], state["topic"], storyboard.get("script") or "")
-                            finally:
-                                conn.close()
+                            agent = StoryboardAgent()
+                            agent.run(
+                                topic=state["topic"],
+                                out_dir=d_out,
+                                target_duration=int(state.get("duration") or 90),
+                            )
                         elif step == 3:
                             _require_steps(state, [2])
-                            from steps.step_03_generate_assets import run as s3
+                            from agents.image_gen_agent import ImageGenAgent
 
-                            storyboard = _read_json(d, "storyboard.json")
-                            conn = sqlite3.connect(db_path)
-                            try:
-                                img_results = s3(conn, storyboard, d_out, concurrency=int(state.get("img_concurrency") or 5))
-                            finally:
-                                conn.close()
-                            _write_json(d, "img_results.json", img_results)
+                            agent = ImageGenAgent()
+                            agent.run(
+                                out_dir=d_out,
+                                concurrency=int(state.get("img_concurrency") or 5),
+                            )
                         elif step == 4:
                             _require_steps(state, [3])
-                            from steps.step_04_generate_videos import run as s4
+                            from agents.video_gen_agent import VideoGenAgent
 
-                            storyboard = _read_json(d, "storyboard.json")
-                            img_results = _read_json(d, "img_results.json")
-                            conn = sqlite3.connect(db_path)
-                            try:
-                                bundle = s4(conn, storyboard, img_results, db_path, d_out, concurrency=int(state.get("video_concurrency") or 3))
-                            finally:
-                                conn.close()
-                            _write_json(d, "video_prompts.json", bundle.get("video_prompts") or {})
-                            _write_json(d, "video_results.json", bundle.get("video_results") or [])
+                            agent = VideoGenAgent()
+                            agent.run(
+                                out_dir=d_out,
+                                concurrency=int(state.get("video_concurrency") or 3),
+                            )
                         elif step == 5:
                             _require_steps(state, [4])
-                            from steps.step_08_concat import run as s5
+                            from agents.concat_agent import ConcatAgent
 
-                            conn = sqlite3.connect(db_path)
-                            try:
-                                final_mp4 = s5(conn, d_out)
-                            finally:
-                                conn.close()
+                            agent = ConcatAgent()
+                            final_mp4 = agent.run(out_dir=d_out)
                             state["final_mp4"] = final_mp4.replace("\\", "/")
                             save_state(out_dir, state)
+                        elif step == 6:
+                            _require_steps(state, [1])
+                            from agents.cover_agent import CoverAgent
+
+                            agent = CoverAgent()
+                            cover = agent.run(out_dir=d_out)
+                            if isinstance(cover, dict) and isinstance(cover.get("image"), str):
+                                state["cover_image"] = cover["image"].replace("\\", "/")
+                                save_state(out_dir, state)
                     except Exception:
                         traceback.print_exc()
                         raise
@@ -443,6 +459,119 @@ def execute_step(out_dir: str, step: int, *, force: bool = False) -> dict[str, A
         _mark_step(state, out_dir, step, "failed", str(e))
         raise
     return load_state(out_dir)
+
+
+def _step1_review_revision_data(d: Path) -> tuple[dict[str, Any], str, str]:
+    brief = _read_json(d, "script_brief.json")
+    if not isinstance(brief, dict):
+        raise ValueError("script_brief.json must be a JSON object")
+    review = brief.get("review")
+    if not isinstance(review, dict):
+        raise ValueError("Step1 has no review result")
+    revision_prompt = str(review.get("revision_prompt") or "").strip()
+    if not revision_prompt:
+        issues = review.get("issues")
+        if isinstance(issues, list) and issues:
+            revision_prompt = "请根据以下审核意见修改剧本：" + "；".join(str(x) for x in issues)
+    if not revision_prompt:
+        raise ValueError("Step1 review has no revision prompt")
+    previous_output = str(brief.get("creative_brief") or brief.get("body") or "").strip()
+    if not previous_output:
+        raise ValueError("Step1 has no script body to revise")
+    return brief, revision_prompt, previous_output
+
+
+def preflight_rewrite_step1_from_review(out_dir: str) -> None:
+    state = load_state(out_dir)
+    if _mark_stale_running_steps(state):
+        save_state(out_dir, state)
+    if _any_step_running(state):
+        raise RuntimeError("A step is running; wait before rewriting Step1")
+    d = resolve_out_dir(out_dir)
+    if not (d / "script_brief.json").is_file():
+        raise FileNotFoundError(str(d / "script_brief.json"))
+    _step1_review_revision_data(d)
+
+
+def execute_rewrite_step1_from_review(out_dir: str) -> dict[str, Any]:
+    os.chdir(PROJECT_ROOT)
+    state = load_state(out_dir)
+    d = resolve_out_dir(out_dir)
+    log_path = d / "logs" / "step_1_rewrite.log"
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+
+    _mark_step(state, out_dir, 1, "running")
+    state = load_state(out_dir)
+
+    try:
+        with _capture_io_lock:
+            with open(log_path, "w", encoding="utf-8") as logf:
+                tee_out = _TeeIO(sys.__stdout__, logf)
+                tee_err = _TeeIO(sys.__stderr__, logf)
+                with contextlib.redirect_stdout(tee_out), contextlib.redirect_stderr(tee_err):
+                    try:
+                        from steps.step_01_research import run as s1
+
+                        old_brief, revision_prompt, previous_output = _step1_review_revision_data(d)
+                        brief = s1(
+                            state["topic"],
+                            duration_seconds=int(state.get("duration") or old_brief.get("duration_seconds") or 90),
+                            style=state.get("style") or old_brief.get("style") or "电影短片",
+                            revision_prompt=revision_prompt,
+                            previous_output=previous_output,
+                        )
+                        brief["review"] = {
+                            "passed": True,
+                            "score": None,
+                            "issues": [],
+                            "revision_prompt": "",
+                            "skipped": True,
+                            "note": "用户点击“修改剧本”后按审核意见重新生成，本次不再进行 review。",
+                            "source_review": old_brief.get("review"),
+                        }
+                        brief["review_attempts"] = old_brief.get("review_attempts") or []
+                        brief["review_skipped_after_manual_rewrite"] = True
+                        _write_json(d, "script_brief.json", brief)
+                        _write_json(d, "research.json", brief)
+                        _write_json(
+                            d,
+                            "step_01_review.json",
+                            {
+                                "final": brief["review"],
+                                "attempts": brief["review_attempts"],
+                                "skipped_after_manual_rewrite": True,
+                            },
+                        )
+                    except Exception:
+                        traceback.print_exc()
+                        raise
+        _mark_step(state, out_dir, 1, "success")
+    except Exception as e:
+        _mark_step(state, out_dir, 1, "failed", str(e))
+        raise
+    return load_state(out_dir)
+
+
+def spawn_rewrite_step1_from_review_thread(out_dir: str) -> bool:
+    key = resolve_out_dir(out_dir).as_posix()
+    lk = _run_lock(key)
+    if not lk.acquire(blocking=False):
+        return False
+    clear_cancel(out_dir)
+    _write_active_marker(out_dir, 1, "step1_rewrite_from_review")
+
+    def worker() -> None:
+        try:
+            execute_rewrite_step1_from_review(out_dir)
+        except Exception:
+            pass
+        finally:
+            _clear_active_marker(out_dir)
+            lk.release()
+
+    t = threading.Thread(target=worker, daemon=True, name=f"manga-step1-rewrite-{Path(out_dir).name}")
+    t.start()
+    return True
 
 
 def spawn_step_thread(out_dir: str, step: int, force: bool) -> bool:
@@ -467,6 +596,24 @@ def spawn_step_thread(out_dir: str, step: int, force: bool) -> bool:
 
 
 def run_pipeline_sequence(out_dir: str, *, force: bool = False) -> None:
+    """顺序执行全部 6 步。
+
+    编排器内部管理顺序执行、条件分支（Step1 审核返工）、
+    并发（Step3/4 多任务并行），以及 Middleware 注入。
+    """
+    from agents.pipeline import PipelineOrchestrator
+
+    state = load_state(out_dir)
+    orchestrator = PipelineOrchestrator(
+        out_dir=out_dir,
+        topic=state["topic"],
+        duration=int(state.get("duration") or 90),
+        style=state.get("style") or "电影短片",
+        img_concurrency=int(state.get("img_concurrency") or 5),
+        video_concurrency=int(state.get("video_concurrency") or 3),
+        stop_checker=lambda: is_stop_requested(out_dir),
+    )
+
     for step in range(1, STEP_COUNT + 1):
         if is_stop_requested(out_dir):
             break
@@ -513,7 +660,7 @@ def hydrate_steps_from_disk(state: dict[str, Any]) -> dict[str, Any]:
     _mark_stale_running_steps(state)
     d = resolve_out_dir(state["out_dir"])
     steps = state.setdefault("steps", {})
-    for sid, fname in [("1", "script_brief.json"), ("2", "storyboard.json"), ("3", "img_results.json"), ("4", "video_prompts.json")]:
+    for sid, fname in [("1", "script_brief.json"), ("2", "storyboard.json"), ("3", "img_results.json"), ("4", "video_prompts.json"), ("6", "cover_prompt.json")]:
         if (d / fname).is_file():
             row = steps.setdefault(sid, {"key": "", "title": "", "status": "pending", "error": None, "updated_at": None})
             if row.get("status") == "pending":
@@ -535,6 +682,9 @@ def _final_mp4_rel_for_run(st: dict[str, Any], rel_out_dir: str) -> str | None:
 
 
 def _cover_image_rel_for_run(rel_out_dir: str) -> str | None:
+    cover = resolve_out_dir(rel_out_dir) / "images" / "cover.png"
+    if cover.is_file():
+        return "images/cover.png"
     img_dir = resolve_out_dir(rel_out_dir) / "images"
     if not img_dir.is_dir():
         return None
@@ -630,6 +780,37 @@ def get_step_artifacts(out_dir: str, step: int) -> dict[str, Any]:
     def to_rel(p: Path) -> str:
         return p.relative_to(d).as_posix()
 
+    def image_meta_by_path() -> dict[str, dict[str, Any]]:
+        meta: dict[str, dict[str, Any]] = {}
+        db_path = d / "assets.db"
+        if not db_path.is_file():
+            return meta
+        try:
+            conn = sqlite3.connect(str(db_path))
+            try:
+                cur = conn.execute("SELECT id, name, prompt, path, status FROM images")
+                for img_id, name, prompt, path, status in cur.fetchall():
+                    if not path:
+                        continue
+                    p = Path(str(path))
+                    if not p.is_absolute():
+                        p = (PROJECT_ROOT / p).resolve()
+                    try:
+                        rel = p.resolve().relative_to(d.resolve()).as_posix()
+                    except ValueError:
+                        rel = str(path).replace("\\", "/")
+                    meta[rel] = {
+                        "ref_id": img_id,
+                        "name": name,
+                        "prompt": prompt,
+                        "status": status,
+                    }
+            finally:
+                conn.close()
+        except Exception:
+            return meta
+        return meta
+
     out: dict[str, Any] = {"step": step, "text": None, "text_kind": None, "images": [], "videos": []}
     files = {1: "script_brief.json", 2: "storyboard.json", 3: "img_results.json", 4: "video_prompts.json"}
     if step in files:
@@ -638,11 +819,21 @@ def get_step_artifacts(out_dir: str, step: int) -> dict[str, Any]:
             out["text_kind"] = "json"
             out["text"] = f.read_text(encoding="utf-8", errors="replace")[:512_000]
     if step == 3:
+        meta = image_meta_by_path()
         img_dir = d / "images"
         if img_dir.is_dir():
             exts = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
             paths = sorted([p for p in img_dir.iterdir() if p.is_file() and p.suffix.lower() in exts], key=lambda x: x.name)
-            out["images"] = [{"path": to_rel(p), "label": p.name} for p in paths[:48]]
+            out["images"] = [
+                {
+                    "path": to_rel(p),
+                    "label": meta.get(to_rel(p), {}).get("name") or p.name,
+                    "ref_id": meta.get(to_rel(p), {}).get("ref_id") or "",
+                    "prompt": meta.get(to_rel(p), {}).get("prompt") or "",
+                    "updated_at": datetime.fromtimestamp(p.stat().st_mtime).isoformat(),
+                }
+                for p in paths[:48]
+            ]
     if step == 4:
         vdir = d / "videos"
         if vdir.is_dir():
@@ -651,8 +842,72 @@ def get_step_artifacts(out_dir: str, step: int) -> dict[str, Any]:
     if step == 5:
         f = d / "final.mp4"
         if f.is_file():
+            out["text_kind"] = "markdown"
+            out["text"] = "时间线已完成\n\n视频已组装完成。"
             out["videos"] = [{"path": to_rel(f), "label": f.name}]
     return out
+
+
+def regenerate_step3_image(out_dir: str, image_path: str, prompt: str) -> dict[str, Any]:
+    body = (prompt or "").strip()
+    if not body:
+        raise ValueError("prompt must not be empty")
+    state = load_state(out_dir)
+    if _any_step_running(state):
+        raise RuntimeError("A step is running; wait before regenerating image")
+    d = resolve_out_dir(out_dir)
+    image_file = safe_rel_file(out_dir, image_path)
+    image_file.relative_to((d / "images").resolve())
+    if image_file.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp"}:
+        raise ValueError("unsupported image file")
+
+    from steps.seedream_client import api_key, generate_image
+
+    key = api_key()
+    written = generate_image(body, image_file, api_key_override=key, image_inputs=None)
+    rel = written.resolve().relative_to(d.resolve()).as_posix()
+
+    db_path = d / "assets.db"
+    if db_path.is_file():
+        try:
+            rel_project = written.resolve().relative_to(PROJECT_ROOT.resolve()).as_posix()
+        except ValueError:
+            rel_project = str(written.resolve()).replace("\\", "/")
+        old_abs = str(image_file.resolve()).replace("\\", "/")
+        old_rel_run = image_path.replace("\\", "/")
+        try:
+            old_rel_project = image_file.resolve().relative_to(PROJECT_ROOT.resolve()).as_posix()
+        except ValueError:
+            old_rel_project = old_abs
+        conn = sqlite3.connect(str(db_path))
+        try:
+            conn.execute(
+                """
+                UPDATE images
+                SET prompt = ?, path = ?, status = ?
+                WHERE REPLACE(path, '\\', '/') IN (?, ?, ?)
+                   OR REPLACE(path, '\\', '/') LIKE ?
+                """,
+                (
+                    body,
+                    rel_project,
+                    "generated",
+                    old_rel_run,
+                    old_rel_project,
+                    old_abs,
+                    f"%/{image_file.name}",
+                ),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+
+    return {
+        "ok": True,
+        "path": rel,
+        "prompt": body,
+        "updated_at": datetime.fromtimestamp(written.stat().st_mtime).isoformat(),
+    }
 
 
 _DOWNSTREAM: dict[int, list[int]] = {1: [2, 3, 4, 5], 2: [3, 4, 5], 3: [4, 5], 4: [5]}
@@ -729,3 +984,33 @@ def update_run_topic(out_dir: str, topic: str) -> dict[str, Any]:
             except (OSError, json.JSONDecodeError):
                 pass
     return {"ok": True, "run_id": state["run_id"], "topic": name}
+
+
+def get_run_reviews(out_dir: str) -> dict[str, Any]:
+    """获取所有步骤的审核结果和创意总监指导。"""
+    d = resolve_out_dir(out_dir)
+    result: dict[str, Any] = {"director_guidance": None, "reviews": {}}
+
+    guidance_file = d / "director_guidance.json"
+    if guidance_file.is_file():
+        try:
+            result["director_guidance"] = json.loads(guidance_file.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            pass
+
+    review_files = {
+        1: "step_01_review.json",
+        2: "step_02_review.json",
+        3: "step_03_review.json",
+        4: "step_04_review.json",
+    }
+    for step_num, fname in review_files.items():
+        fp = d / fname
+        if fp.is_file():
+            try:
+                data = json.loads(fp.read_text(encoding="utf-8"))
+                result["reviews"][str(step_num)] = data
+            except (OSError, json.JSONDecodeError):
+                pass
+
+    return result

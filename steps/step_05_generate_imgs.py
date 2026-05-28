@@ -34,7 +34,7 @@ def run(conn, prompt_map: dict, out_dir: str, concurrency: int = 5) -> dict:
     img_results: dict[str, str] = {}
 
     pending_assets = [(rid, data) for rid, data in assets.items() if data.get("prompt")]
-    print(f"  资产文生图（角色/场景/道具）：{len(pending_assets)} 张，并发 {concurrency}")
+    print(f"  资产文生图（角色/场景）：{len(pending_assets)} 张，并发 {concurrency}")
 
     def gen_asset(item: tuple[str, dict], idx: int, total: int) -> tuple[str, str | None]:
         ref_id, data = item

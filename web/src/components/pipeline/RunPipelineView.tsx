@@ -1,9 +1,10 @@
 import { useEffect } from "react"
 
+import { DirectorGuidanceCard } from "@/components/pipeline/DirectorGuidanceCard"
 import { PipelineRunLogs } from "@/components/pipeline/PipelineRunLogs"
 import { PipelineStepChain } from "@/components/pipeline/PipelineStepChain"
 import { StepArtifactsPanel } from "@/components/pipeline/StepArtifactsPanel"
-import type { RunDetail, StepArtifacts } from "@/lib/api"
+import type { RunDetail, RunReviews, StepArtifacts } from "@/lib/api"
 
 export interface RunPipelineViewProps {
   detail: RunDetail
@@ -11,13 +12,16 @@ export interface RunPipelineViewProps {
   onStepChange: (step: number) => void
   artByStep: Record<string, StepArtifacts>
   logByStep: Record<string, string>
+  runReviews?: RunReviews | null
   onFetchArt: (step: number) => void
   onFetchLog: (step: number) => void
   onArtifactSaved?: (step: number) => void
   onArtDirtyChange?: (dirty: boolean) => void
   onRunStep?: (step: number) => void
+  onRewriteStep1FromReview?: () => void
   onRunAll?: () => void
   runningStepReq?: boolean
+  rewritingStep1Req?: boolean
   runningAllReq?: boolean
   pipelineBusy?: boolean
 }
@@ -29,12 +33,15 @@ export function RunPipelineView({
   onStepChange,
   artByStep,
   logByStep,
+  runReviews,
   onFetchArt,
   onFetchLog,
   onArtifactSaved,
   onArtDirtyChange,
   onRunStep,
+  onRewriteStep1FromReview,
   runningStepReq,
+  rewritingStep1Req,
   onRunAll,
   runningAllReq,
   pipelineBusy,
@@ -58,14 +65,20 @@ export function RunPipelineView({
   return (
     <div className="space-y-6">
       <PipelineStepChain detail={detail} activeStep={activeStep} onStepChange={onStepChange} />
+      {runReviews?.director_guidance && (
+        <DirectorGuidanceCard guidance={runReviews.director_guidance} />
+      )}
       <StepArtifactsPanel
         detail={detail}
         artByStep={artByStep}
         activeStep={activeStep}
+        runReviews={runReviews}
         onArtifactSaved={onArtifactSaved}
         onDirtyChange={onArtDirtyChange}
         onRunStep={onRunStep}
+        onRewriteStep1FromReview={onRewriteStep1FromReview}
         runningStep={runningStepReq}
+        rewritingStep1={rewritingStep1Req}
         onRunAll={onRunAll}
         runningAll={runningAllReq}
         pipelineBusy={pipelineBusy}

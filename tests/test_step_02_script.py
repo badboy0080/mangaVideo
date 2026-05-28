@@ -36,6 +36,16 @@ class TestStep02Script(unittest.TestCase):
             self.assertEqual(saved, body)
             self.assertNotIn("# 测试主题", saved)
 
+    def test_user_prompt_does_not_force_complex_local_format(self) -> None:
+        research = {"style": "动画", "creative_brief": "纲要"}
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch.object(step_02_script, "deepseek_chat", return_value="") as mock_chat:
+                step_02_script.run("测试主题", research, tmp, target_duration=30)
+        user_prompt = mock_chat.call_args[0][1]
+        self.assertIn("请根据 SYSTEM_PROMPT 生成故事板正文", user_prompt)
+        self.assertNotIn("表格元数据", user_prompt)
+        self.assertNotIn("严格按照上面的格式要求", user_prompt)
+
 
 if __name__ == "__main__":
     unittest.main()

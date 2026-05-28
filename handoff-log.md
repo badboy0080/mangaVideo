@@ -1,13 +1,192 @@
 # handoff-log
 
+## 2026-05-28 - 提交前清理 Git 跟踪文件
+
+- **本轮用户想做什么**：把项目提交到 GitHub，并确保 `node_modules`、`outputs`、`.env` 不再上传。
+- **已经完成**：检查 Git 状态和远程仓库；确认 `.env` 已在忽略规则中；新增 `node_modules/`、`outputs/` 到 `.gitignore`；将已被 Git 跟踪的 `node_modules` 和 `outputs` 从索引中取消追踪，保留本地文件。
+- **改动文件**：`.gitignore`、`handoff-log.md`、`workUp.md`；同时 Git 索引中会记录移除 `node_modules/` 与 `outputs/` 的历史追踪。
+- **验证**：待提交前执行 `git ls-files node_modules outputs .env`，确认不再被跟踪；提交后执行 `git push origin main`。
+- **待办/风险**：仓库中已有大量历史业务改动，本轮按用户“提交项目到 GitHub”的要求一起提交；如远程拒绝推送，需要先拉取或处理认证问题。
+
 ## 当前接手摘要
 
 - **项目**：漫剧流水线（manga-pipeline），含 `web` 控制台与 Python 流水线。
-- **近期主题**：流水线产物**文档内分段编辑**（Step 1/2/3/4/6）；保存写回磁盘；「运行此步骤」按钮。
+- **近期主题**：Step6 封面生成功能全面补齐（编排器+提示词模板）；提示词审核规则新增"主角不超过3人"；资产提取限定场景最多3个。
 - **导航**：侧栏「我的项目」→ `homeView=projects`；「项目」在首页滚到 `#home-projects`，在「我的项目」页则回到首页并定位预览区。
 - **文档**：[`docs/designRules`](docs/designRules)；[`docs/prompt-alignment-feasibility.md`](docs/prompt-alignment-feasibility.md)。
 
 ## 最近工作记录
+
+### 2026-05-28 — 修复僵尸标记导致前端持续轮询
+
+- **问题**：后端进程被 kill 后，`.pipeline_active.json`（活跃标记）未被清理。新后端启动时读到旧标记，误以为步骤还在运行，前端检测到 `running` 状态就每 2.5s 轮询一次，但实际没有线程在工作，状态永远卡住。
+- **根因**：`_mark_stale_running_steps()` 函数已存在但只在 4 个入口被调用，没有在 `list_runs()` 和 `get_run_detail()` 这两个前端轮询入口调用。
+- **修复**：`server/pipeline_runner.py` 的 `load_state()` 函数里加入自动僵尸清理——每次读取状态时检查活跃标记是否属于已死进程，如果是则取消 running 步骤并落盘。
+- **改动文件**：`server/pipeline_runner.py`（`load_state()` 加 4 行）
+- **手动清理**：已删除卡住的 `outputs/20260528_095901_131d/.pipeline_active.json`
+- **验证**：编译通过、17 个测试通过
+
+### 2026-05-28 — Step6 封面功能补齐 + 提示词规则优化
+
+- **用户目标**：
+  1. 增加封面生成步骤（Step6），用 DeepSeek 根据 Step1 故事梗概生成电影节海报风格封面 prompt，再用 Seedream 生图
+  2. 修改 Step1 审核规则，新增「主角不超过 3 人」
+  3. 资产提取提示词限定场景最多 1-3 个（原来无限）
+- **改动**：
+  - `prompts/step_06_cover_system.txt`：更新为详细的封面海报模板（柯达Vision3暖色胶片 + 华语电影节排版 + 手写毛笔书法主标题 + 宋体副标题 + 电影节荣誉栏 + TIFF/CNEX/IDFA 美学标准），含 7 条核心规则
+  - `agents/__init__.py`：导出 `CoverAgent`
+  - `agents/pipeline.py`：新增 `run_step6()` 方法 + `run_all()` 步骤列表加入封面（第 6 步）
+  - `prompts/step_01_review/_base.txt`：新增第 3 条规则「主角不超过 3 人」+ 后续编号 3→10 顺延为 4→11
+  - `prompts/step_04_extract_assets_system.txt`：场景规则追加「只提取1到3个最重要的场景」
+- **封面功能现状**：
+  - 后端执行层（`steps/step_09_generate_cover.py`）和 Agent 封装（`agents/cover_agent.py`）此前已存在
+  - `server/pipeline_runner.py` 中 Step6 已注册为第 6 步，依赖 Step1
+  - 前端 `FlovaRecentProjects.tsx` 已支持展示 `cover_image` 字段
+  - 本次补齐了：提示词模板更新 + Agent 注册 + 编排器集成
+- **验证**：后端编译通过、17 个测试通过、前端构建通过
+
+### 2026-05-28 — 取消道具资产生成
+
+- **用户目标**：修改生成资产规则，不再生成道具，只生成人物和场景。
+- **完成**：更新 Step01/Step02/Step03 相关 system prompt；Step04 资产清单归一化时强制 `props=[]`；Step05 日志改为“角色/场景”；新增测试覆盖旧数据中 props 被忽略。
+- **改动文件**：`prompts/step_01/_base.txt`、`prompts/step_01/styles/品牌广告.txt`、`prompts/step_01/styles/游戏CG.txt`、`prompts/step_02_script_system.txt`、`prompts/step_04_extract_assets_system.txt`、`prompts/step_04_img_single_system.txt`、`steps/step_04_prompts_img.py`、`steps/step_05_generate_imgs.py`、`tests/test_step3_image_regenerate.py`、`workUp.md`。
+- **验证**：`python -m unittest tests.test_step3_image_regenerate tests.test_step_04_generate_videos` 通过；`python -m py_compile steps\step_04_prompts_img.py steps\step_05_generate_imgs.py` 通过；`git diff --check` 通过，仅有换行提示。
+- **待办/风险**：历史 run 里的 `props` 字段会保留但为空；旧的独立道具图片不会自动删除。
+
+### 2026-05-28 — AI 短片创作流程文档分析
+
+- **用户目标**：分析 `视频创作流程2.docx` 中用户与 AI 的对话、AI 返回文本格式、文生图/图生视频提示词、完整短片创作流程，并对比当前项目差别。
+- **完成**：抽取 docx 正文，识别《悟空·暗渊》和《潮汕·时间的气味》两个案例；对照当前 5 步流水线、Agent 编排、prompt 注册和实际产物 JSON；新增报告 `docs/ai-short-film-workflow-analysis.md`。
+- **改动文件**：`docs/ai-short-film-workflow-analysis.md`、`workUp.md`、`handoff-log.md`；另生成分析中间文件 `outputs/docx_extracted_video_flow2.txt`。
+- **验证**：成功读取 docx 与项目关键文件；本轮未改业务代码，未运行单元测试。
+- **待办/风险**：当前项目还需把创意总监指导真正注入下游 prompt；分批确认、音频/时间线、多模型路由仍待设计。
+
+### 2026-05-27 — 多智能体协作前端展示
+
+- **用户目标**：在前端页面展示多智能体协作的成果（创意总监指导、每步审核结果）。
+- **改动**：
+  - **后端**：
+    - `server/pipeline_runner.py`：新增 `get_run_reviews()` 函数，读取 `director_guidance.json` 和 `step_0X_review.json`
+    - `server/main.py`：新增 `GET /api/runs/{run_id}/reviews` 端点
+  - **前端 API 层**（`web/src/lib/api.ts`）：
+    - 新增类型：`ReviewResult`、`DirectorGuidance`、`RunReviews`
+    - 新增函数：`getRunReviews()`
+  - **前端组件**（新建 2 个）：
+    - `web/src/components/pipeline/ReviewBadge.tsx`：审核结果徽章（通过✅/未通过❌/跳过⏭）+ 分数 + 问题列表 + 评分进度条 `ScoreBar`
+    - `web/src/components/pipeline/DirectorGuidanceCard.tsx`：创意总监指导卡片（基调、视觉风格、色调、节奏、分镜建议、音频方向）+ 核心主题标签
+  - **前端集成**：
+    - `App.tsx`：新增 `runReviews` 状态 + `fetchRunReviews` 函数，在 `refreshDetail` 时自动加载审核数据
+    - `RunPipelineView.tsx`：接收 `runReviews`，展示 `DirectorGuidanceCard`
+    - `StepArtifactsPanel.tsx`：接收 `runReviews`，每步产物上方展示 `ReviewBadge` + `ScoreBar`
+- **验证**：
+  - 后端 `py_compile` 通过
+  - 前端 `tsc + vite build` 通过
+  - 全部 17 个后端测试通过
+- **效果**：打开任意已完成的 Run 详情页，进度链下方显示「创意总监指导」卡片；切换到 Step1-4 时在产物上方显示审核结果徽章和评分条
+
+### 2026-05-27 — 第三阶段：多智能体协作
+
+- **用户目标**：实现多智能体协作体系——创意总监全局统筹、每步质量审核、编排器集成完整协作流程。
+- **改动**：
+  - 新建 `agents/director_agent.py`（创意总监 Agent）：
+    - 流水线启动前分析用户需求（主题/风格/时长），输出《创意指导纲要》
+    - 指导内容：整体基调、视觉风格、色调、节奏、核心主题、角色建议、分镜建议、音频方向
+    - 覆盖全部 7 种风格（电影短片/品牌广告/动画叙事/游戏CG/MV/科幻短片/纪录片），每种有默认指导
+    - API 不可用时自动降级为默认指导，不阻断流程
+  - 新建 `agents/reviewer_agent.py`（质量审核员 Agent）：
+    - 支持 Step2（分镜）审核：镜头数量、画面描述、角色一致性、节奏变化、叙事连贯
+    - 支持 Step3（资产）审核：覆盖完整性、风格统一、功能匹配、数量合理
+    - 支持 Step4（视频）审核：片段完整性、时长匹配、画面连贯、动作流畅
+    - 统一 JSON 输出：passed/score/issues/revision_prompt
+    - API 异常自动降级通过（skipped=True）
+  - 更新 `agents/pipeline.py`（v3 多智能体协作版）：
+    - 新增 `run_director()`：流水线第一步运行创意总监，产出保存为 `director_guidance.json`
+    - Step2/3/4 执行后自动调用审核员，审核结果保存为 `step_0X_review.json`
+    - Step2 审核不通过不自动返工（分镜返工成本高），但记录审核意见
+    - `run_all()` 集成完整流程：创意总监 → Step1-5（含审核）
+  - 更新 `agents/__init__.py`：暴露 `DirectorAgent`、`ReviewerAgent`
+- **不动内容**：`server/main.py`、`steps/`、`prompts/`、`web/`、前端全部不动
+- **验证**：
+  - 全部新增文件 `py_compile` 通过
+  - 4 组测试共 17 个测试全部通过
+  - `server/main.py` 编译通过
+  - `web` 下 `pnpm run build` 通过
+- **Agent 体系总览**（当前共 7 个 Agent）：
+  - `DirectorAgent`（创意总监）：流水线启动前全局统筹
+  - `ResearchAgent`（剧本研究员）：Step1 剧本生成 + 审核返工
+  - `StoryboardAgent`（分镜导演）：Step2 分镜生成
+  - `ImageGenAgent`（美术生成师）：Step3 图片生成
+  - `VideoGenAgent`（视频生成师）：Step4 视频生成
+  - `ConcatAgent`（剪辑师）：Step5 拼接
+  - `ReviewerAgent`（质量审核员）：Step2/3/4 审核
+- **待办/风险**：创意总监的指导目前仅保存到文件，下游 Agent（剧本/分镜等）尚未主动读取 `director_guidance.json` 来调整自己的行为；后续可在各 Agent 的 prompt 中注入创意指导
+
+### 2026-05-27 — 第二阶段：智能编排 + Hook 监控
+
+- **用户目标**：在第一阶段 Agent 封装基础上，引入智能编排器统一管理 5 步执行、条件分支、并发，并注入 Hook Middleware 实现全链路监控。
+- **改动**：
+  - 新建 `agents/middleware.py`（3 个 Middleware）：
+    - `PipelineLoggingMiddleware`：将 Agent 推理过程写入 `logs/step_N.log`，兼容原有日志系统
+    - `ProgressMiddleware`：实时更新 `pipeline_ui_state.json`，前端轮询可见进度
+    - `StopCheckMiddleware`：每次推理前检查用户是否请求停止
+  - 新建 `agents/pipeline.py`（PipelineOrchestrator）：
+    - 统一管理 5 步顺序执行
+    - Step1 审核不通过自动返工（条件分支）
+    - Step3/4 支持并发执行
+    - 统一注入 Middleware
+  - 修改 `agents/__init__.py`：暴露 `PipelineOrchestrator`
+  - 修改 `server/pipeline_runner.py`：`run_pipeline_sequence()` 改为创建编排器并注入停止检查
+- **AgentScope 2.0 Middleware 机制**：基于 `MiddlewareBase`，提供 5 个钩子点——`on_reply`、`on_reasoning`、`on_acting`、`on_model_call`、`on_system_prompt`；Agent 通过 `middlewares=[]` 参数注入
+- **不动内容**：`server/main.py`、`steps/`、`prompts/`、`web/` 全部不动
+- **验证**：
+  - 全部新增文件 `py_compile` 通过
+  - 4 组测试共 17 个测试全部通过（`test_step_01_research` 7 个 + `test_step_01_review` 6 个 + `test_step_02_script` 2 个 + `test_step3_image_regenerate` 2 个）
+  - `server/main.py` 编译通过
+  - `web` 下 `pnpm run build` 通过
+- **待办/风险**：Middleware 的 `on_reply` 钩子目前依赖 Agent 内部调用 `reply()` 触发，当前 Agent 实现直接调用 `steps/` 模块（不经过 AgentScope 推理循环），Middleware 的日志/进度/停止检查功能已通过编排器层面保障；后续可进一步让 Agent 真正使用 `reply()` 接口以充分激活 Middleware
+
+### 2026-05-27 — 第一阶段：流水线核心 AgentScope 重构
+
+- **用户目标**：用 AgentScope 2.0 框架重构流水线核心编排逻辑，不动前端、FastAPI 路由和提示词模板。
+- **改动**：
+  - 新建 `agents/` 目录（8 个文件）：`__init__.py`、`tools.py`、`research_agent.py`（Step1 剧本+审核）、`storyboard_agent.py`（Step2 分镜）、`image_gen_agent.py`（Step3 图片）、`video_gen_agent.py`（Step4 视频）、`concat_agent.py`（Step5 拼接）
+  - 修改 `server/pipeline_runner.py`：`execute_step()` 中 5 个步骤分支从手动调用 `steps/` 模块改为调用对应 Agent（代码量从约 88 行减至约 47 行）
+  - 修改 `requirements.txt`：新增 `agentscope>=0.2.0`
+- **AgentScope 2.0 实际 API**：核心类 `Agent`（非教程中的 `ReActAgent`）；专用 `DeepSeekChatModel` + `DeepSeekCredential`；`Msg` 字段为 `name/content/role/metadata`
+- **不动内容**：`server/main.py`、`steps/`、`prompts/`、`web/` 全部不动
+- **验证**：
+  - 全部 8 个文件 `py_compile` 通过
+  - `tests.test_step_01_research`（7 个测试）全部通过
+  - `tests.test_step_01_review`（6 个测试）全部通过，且确认新 Agent 路径已被成功调用
+  - `tests.test_step_02_script`（2 个测试）通过
+  - `tests.test_step3_image_regenerate`（2 个测试）通过
+  - `server/main.py` 编译通过
+  - `web` 下 `pnpm run build` 通过
+- **待办/风险**：AgentScope Agent 实例化需要有效 DeepSeek API Key 才能端到端验证；后端进程需重启加载新 `pipeline_runner.py`
+
+### 2026-05-27 — prompts 文件引用清单
+
+- **用户目标**：给 `prompts/` 目录写一份各文件的引用清单，方便判断哪个 prompt 影响哪一步。
+- **改动**：新增 `prompts/README.md`，按“当前主流程引用 / 旧脚本引用 / 暂未发现代码引用”整理全部 prompt 文件，并补充主流程调用关系和改 prompt 建议。
+- **验证**：用 `rg --files prompts` 与 `Select-String` 核对清单覆盖全部 prompt 文件；`git diff --check -- prompts/README.md` 通过。
+- **待办/风险**：`camera_grammar.json`、`step_04_refine_shots_system.txt` 暂未接入；若后续要启用，需要先设计对应 Agent 或校验逻辑。
+
+### 2026-05-27 — Step3 图片 prompt 展示与重新生成
+
+- **用户目标**：在生成图片下方展示当时生成这张图的 prompt，并提供「修改」「重新生成」按钮；重新生成时使用修改后的 prompt 覆盖原图。
+- **改动**：后端 `get_step_artifacts` 从 `assets.db.images` 读取图片 prompt 并返回给前端；新增 `POST /api/runs/{run_id}/steps/3/images/regenerate`；前端图片卡片显示「生成提示词」、支持编辑 prompt 和重新生成；重新生成后刷新 Step3 产物并给图片 URL 加更新时间参数避免缓存旧图。
+- **补充修复**：`requirements.txt` 增加 `pypinyin>=0.51.0`，并已在当前环境安装，解决 `No module named 'pypinyin'`。
+- **验证**：`python -m unittest tests.test_step3_image_regenerate tests.test_step_01_review` 通过；`python -m py_compile server\pipeline_runner.py server\main.py` 通过；`web` 下 `pnpm run build` 通过；Vite 首页 HTTP 200 且 React 根节点存在。
+- **待办/风险**：本环境没有 Playwright/Puppeteer，未做真实浏览器点击截图验证；真实重新生图仍需有效 Seedream API Key。后端进程需重启到 `api_revision: 17` 才能使用新接口。
+
+### 2026-05-26 — Step01 审核 Agent
+
+- **用户目标**：Step01 生成后增加可配置审核 Agent；不通过时交回 Step01 自动返工一次，审核结果在 Step1 内展示。
+- **改动**：新增 `prompts/step_01_review/`、`steps/step_01_review.py`、`tests/test_step_01_review.py`；修改 `steps/step_01_research.py`、`server/pipeline_runner.py`、`prompts/pipeline_prompts.json`、`.env.example`；前端文档视图支持展示审核结果。
+- **补充调整**：`prompts/step_01_review/_base.txt` 改为只审核剧本好坏，不再要求检查故事板字段；`rules.json` 改为核心命题、人物动机、冲突、节奏、结尾等剧本质量维度。
+- **交互补充**：Step1 审核说明右下角新增「修改剧本」按钮；点击后走 `POST /api/runs/{run_id}/steps/1/rewrite-from-review`，把当前剧本和审核意见交回 Step1 Agent 重新生成，本次不再 review。
+- **验证**：`python -m unittest tests.test_step_01_research tests.test_step_01_review` 通过；`python -m py_compile ...` 通过；`web` 下 `pnpm run build` 通过（仅原有 CSS at-rule/chunk 警告）。
+- **待办/风险**：真实 DeepSeek 端到端需用实际 API 跑一次 Step1；手动编辑已通过的 Step1 产物时不会自动重新审核。
 
 ### 2026-05-20 — 新增本地启动说明文档
 
@@ -430,3 +609,28 @@
 ### 更早（归档摘要）
 
 - API / 成片：`GET /api/runs` 与 `final_mp4`、Step 6 分镜 `script_split`、Seedance `SEEDANCE_PRIVACY_FALLBACK` 等见历史提交与对话；详情可搜代码与 `docs/`。
+## 当前接手摘要（2026-05-28 更新）
+
+- **项目**：manga-pipeline，包含 Python Step01-05 自动化流水线与 React 前端工作台。
+- **当前重点**：已按 `视频创作流程2.docx` 的产物风格完成“提示词瘦身 + Python 去强制格式 + 前端正文优先展示”改造。
+- **核心原则**：Step01/02/03/04 的展示格式优先由各自 `SYSTEM_PROMPT` 决定；Python 只保留自动化必需字段和轻量解析；前端编辑优先编辑模型原文。
+- **最低约束**：Step02 仍需要 `分镜 N｜X 秒｜标题`、I2V 块和 `@资产名`，否则 Step03/04 解析可能拿不到资产和镜头信息。
+- **验证状态**：本轮单元测试、Python 编译、前端 build、diff 空白检查均通过；未用真实 API 跑完整新 run。
+
+## 最近 5 次工作记录
+
+### 2026-05-28 - Step01-05 提示词与产物展示改造
+
+- **用户目标**：保留 Step01-05 自动化工作流，但把输出格式控制权从 `steps/*.py` 和前端固定解析迁移到 `SYSTEM_PROMPT`，让前端展示与模型输出一致。
+- **完成**：
+  - 重写 `prompts/step_01/_base.txt`、Step01 各风格 prompt、`prompts/step_02_script_system.txt`、`prompts/step_04_extract_assets_system.txt`、`prompts/step_04_img_single_system.txt`、`prompts/step_06_i2v_polish_system.txt`。
+  - 调整 `steps/step_02_script.py`、`steps/step_04_prompts_img.py`、`steps/step_06_video_prompts.py`，减少 Python 对输出格式的强制和本地替代文案。
+  - 调整前端 `web/src/lib/json-to-markdown.ts`、`web/src/lib/artifact-parse.ts`、`web/src/components/pipeline/EditableArtifactPanel.tsx`，改为正文优先展示和编辑。
+  - 调整 `server/pipeline_runner.py` 的 Step05 展示文案。
+  - 更新相关测试，并修正 `steps/step_01_review.py` 的旧格式兜底返工文案。
+- **验证**：
+  - `python -m unittest tests.test_step_01_research tests.test_step_02_script tests.test_script_split tests.test_step_04_generate_videos tests.test_step3_image_regenerate tests.test_step_01_review` 通过。
+  - `python -m py_compile ...` 覆盖相关后端文件，通过。
+  - `pnpm run build` 通过，仅有既有 CSS at-rule 与 chunk size 警告。
+  - `git diff --check -- prompts steps tests web/src server` 通过，仅有 Windows 换行提示。
+- **待办/风险**：还没有用真实模型和真实视频生成 API 完整跑新 run；后续改 system prompt 时必须保留 Step02 的分镜标题、I2V 块和 `@资产名`。

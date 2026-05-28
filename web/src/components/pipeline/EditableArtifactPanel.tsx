@@ -2,21 +2,11 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react
 import { Loader2 } from "lucide-react"
 
 import { TextContentViewer } from "@/components/TextContentViewer"
-import { PromptMapEditor } from "@/components/pipeline/editors/PromptMapEditor"
-import { ResearchEditor } from "@/components/pipeline/editors/ResearchEditor"
-import { VideoPromptsEditor } from "@/components/pipeline/editors/VideoPromptsEditor"
 import { Button } from "@/components/ui/button"
 import {
-  type PromptMapEditState,
-  type ResearchEditState,
-  type VideoPromptEdit,
   isEditableStep,
-  mergePromptMapJson,
-  mergeResearchJson,
-  mergeVideoPromptsJson,
-  parsePromptMapJson,
-  parseResearchJson,
-  parseVideoPromptsJson,
+  mergePrimaryBodyJson,
+  primaryBodyForStep,
 } from "@/lib/artifact-parse"
 import { putStepArtifactText } from "@/lib/api"
 import { cn } from "@/lib/utils"
@@ -32,6 +22,9 @@ export interface EditableArtifactPanelProps {
   maxHeightClass?: string
   onSaved?: (step: number) => void
   onDirtyChange?: (dirty: boolean) => void
+  onRewriteFromReview?: () => void
+  rewritingFromReview?: boolean
+  rewriteDisabled?: boolean
 }
 
 export function EditableArtifactPanel({
@@ -43,6 +36,9 @@ export function EditableArtifactPanel({
   maxHeightClass = "max-h-[28rem]",
   onSaved,
   onDirtyChange,
+  onRewriteFromReview,
+  rewritingFromReview,
+  rewriteDisabled,
 }: EditableArtifactPanelProps) {
   const editable = isEditableStep(step)
   const [mode, setMode] = useState<PanelMode>("view")
@@ -50,24 +46,34 @@ export function EditableArtifactPanel({
   const [saveHint, setSaveHint] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const [research, setResearch] = useState<ResearchEditState | null>(null)
-  const [promptMap, setPromptMap] = useState<PromptMapEditState | null>(null)
-  const [videoPrompts, setVideoPrompts] = useState<VideoPromptEdit[]>([])
+  const [rawBody, setRawBody] = useState("")
 
   const baseline = useMemo(() => text.trim(), [text])
 
   const currentSerialized = useMemo(() => {
     try {
-      if (step === 1 && research) return mergeResearchJson(text, research)
-      if (step === 2 && promptMap) return mergePromptMapJson(text, promptMap)
-      if (step === 4) return mergeVideoPromptsJson(text, videoPrompts)
+      if (mode === "edit") return mergePrimaryBodyJson(step, text, rawBody)
     } catch {
       return baseline
     }
     return baseline
-  }, [step, research, promptMap, videoPrompts, text, baseline])
+  }, [mode, step, rawBody, text, baseline])
 
   const dirty = mode === "edit" && currentSerialized.trim() !== baseline
+  const reviewRevisionPrompt = useMemo(() => {
+    if (step !== 1 || textKind !== "json") return ""
+    try {
+      const obj = JSON.parse(text) as Record<string, unknown>
+      const review = obj.review
+      if (!review || typeof review !== "object") return ""
+      const row = review as Record<string, unknown>
+      if (row.skipped === true) return ""
+      return typeof row.revision_prompt === "string" ? row.revision_prompt.trim() : ""
+    } catch {
+      return ""
+    }
+  }, [step, text, textKind])
+  const showRewriteButton = mode === "view" && step === 1 && Boolean(reviewRevisionPrompt) && Boolean(onRewriteFromReview)
 
   useEffect(() => {
     onDirtyChange?.(dirty)
@@ -81,9 +87,7 @@ export function EditableArtifactPanel({
 
   const loadEditState = useCallback(() => {
     try {
-      if (step === 1) setResearch(parseResearchJson(text))
-      else if (step === 2) setPromptMap(parsePromptMapJson(text))
-      else if (step === 4) setVideoPrompts(parseVideoPromptsJson(text))
+      setRawBody(primaryBodyForStep(step, text) || text)
       setError(null)
     } catch (e) {
       setError(e instanceof Error ? e.message : "解析产物失败，无法进入编辑")
@@ -118,14 +122,8 @@ export function EditableArtifactPanel({
     try {
       let payload: string
       let kind: "json" | "markdown"
-      if (step === 1 && research) {
-        payload = mergeResearchJson(text, research)
-        kind = "json"
-      } else if (step === 2 && promptMap) {
-        payload = mergePromptMapJson(text, promptMap)
-        kind = "json"
-      } else if (step === 4) {
-        payload = mergeVideoPromptsJson(text, videoPrompts)
+      if (step === 1 || step === 2 || step === 4) {
+        payload = mergePrimaryBodyJson(step, text, rawBody)
         kind = "json"
       } else {
         throw new Error("当前步骤不支持保存")
@@ -151,16 +149,14 @@ export function EditableArtifactPanel({
     if (error) {
       return <p className="text-sm text-destructive">{error}</p>
     }
-    if (step === 1 && research) {
-      return <ResearchEditor state={research} onChange={setResearch} />
-    }
-    if (step === 2 && promptMap) {
-      return <PromptMapEditor state={promptMap} onChange={setPromptMap} />
-    }
-    if (step === 4) {
-      return <VideoPromptsEditor items={videoPrompts} onChange={setVideoPrompts} />
-    }
-    return <p className="text-sm text-muted-foreground">加载编辑区…</p>
+    return (
+      <textarea
+        value={rawBody}
+        onChange={(event) => setRawBody(event.target.value)}
+        className="min-h-[min(65vh,36rem)] w-full resize-y rounded-lg border border-zinc-800 bg-zinc-950/80 px-3 py-3 font-mono text-sm leading-6 text-zinc-100 outline-none focus:border-accent-cool"
+        spellCheck={false}
+      />
+    )
   }
 
   return (
@@ -197,7 +193,23 @@ export function EditableArtifactPanel({
         )}
 
         {mode === "view" || !editable ? (
-          <TextContentViewer text={text} textKind={textKind} maxHeightClass={maxHeightClass} />
+          <>
+            <TextContentViewer text={text} textKind={textKind} maxHeightClass={maxHeightClass} />
+            {showRewriteButton && (
+              <div className="mt-3 flex justify-end">
+                <Button
+                  type="button"
+                  size="sm"
+                  className="gap-1.5"
+                  disabled={rewriteDisabled || rewritingFromReview}
+                  onClick={onRewriteFromReview}
+                >
+                  {rewritingFromReview && <Loader2 className="size-3.5 animate-spin" aria-hidden />}
+                  修改剧本
+                </Button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="min-h-[min(65vh,36rem)] max-h-[75vh] space-y-4 overflow-y-auto pr-1">
             {renderEditor()}

@@ -92,7 +92,7 @@ def run(script_data: dict, img_results: dict, db_path: str, out_dir: str) -> dic
             i2v_note = "（未解析到 Step02 图生视频 I2V 正文，prompt 保持为空）"
             print(f"    [警告] {shot_id} 未找到 I2V 块，prompt 保持为空")
 
-        final_prompt = _inject_dialogues(core_body, dialogues)
+        final_prompt = core_body
 
         video_prompts[shot_id] = {
             "prompt": final_prompt,

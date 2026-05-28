@@ -55,14 +55,14 @@ export function HomeComposer({
 
         <div className="flex items-center justify-between gap-2 px-3 pb-3 pt-1 sm:px-4 sm:pb-4">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-            <div className="flex items-center gap-1.5">
-              <Clapperboard className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+            <div>
               <Label htmlFor="home-style-select" className="sr-only">
                 风格
               </Label>
               <NativeSelect
                 id="home-style-select"
                 value={style}
+                leadingIcon={<Clapperboard className="size-4" aria-hidden />}
                 aria-label="风格"
                 iconClassName="min-w-0"
                 className={nativeSelectPillClass}
@@ -76,14 +76,14 @@ export function HomeComposer({
               </NativeSelect>
             </div>
 
-            <div className="flex items-center gap-1.5">
-              <Timer className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+            <div>
               <Label htmlFor="home-duration-select" className="sr-only">
                 时长
               </Label>
               <NativeSelect
                 id="home-duration-select"
                 value={String(duration)}
+                leadingIcon={<Timer className="size-4" aria-hidden />}
                 aria-label="成片时长"
                 iconClassName="min-w-0"
                 className={nativeSelectPillClass}

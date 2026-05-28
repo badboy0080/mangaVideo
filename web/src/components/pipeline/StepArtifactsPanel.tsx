@@ -2,11 +2,12 @@ import { Loader2, Play, PlayCircle } from "lucide-react"
 
 import { EditableArtifactPanel } from "@/components/pipeline/EditableArtifactPanel"
 import { ArtifactMediaCard } from "@/components/pipeline/ArtifactMediaCard"
+import { ReviewBadge, ScoreBar } from "@/components/pipeline/ReviewBadge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { isEditableStep } from "@/lib/artifact-parse"
-import { fileUrl } from "@/lib/api"
-import type { RunDetail, StepArtifacts, StepRow, StepStatus } from "@/lib/api"
+import { fileUrl, postRegenerateStep3Image } from "@/lib/api"
+import type { ReviewResult, RunDetail, RunReviews, StepArtifacts, StepRow, StepStatus } from "@/lib/api"
 import { stepTitleZh } from "@/lib/step-labels"
 import { cn } from "@/lib/utils"
 
@@ -31,11 +32,14 @@ export interface StepArtifactsPanelProps {
   detail: RunDetail
   artByStep: Record<string, StepArtifacts>
   activeStep: number
+  runReviews?: RunReviews | null
   onArtifactSaved?: (step: number) => void
   onDirtyChange?: (dirty: boolean) => void
   onRunStep?: (step: number) => void
+  onRewriteStep1FromReview?: () => void
   onRunAll?: () => void
   runningStep?: boolean
+  rewritingStep1?: boolean
   runningAll?: boolean
   pipelineBusy?: boolean
 }
@@ -46,10 +50,13 @@ function StepBlock({
   detail,
   arts,
   isActive,
+  review,
   onArtifactSaved,
   onDirtyChange,
   onRunStep,
+  onRewriteStep1FromReview,
   runningStep,
+  rewritingStep1,
   pipelineBusy,
 }: {
   stepNum: number
@@ -57,16 +64,24 @@ function StepBlock({
   detail: RunDetail
   arts: StepArtifacts | undefined
   isActive: boolean
+  review?: ReviewResult | null
   onArtifactSaved?: (step: number) => void
   onDirtyChange?: (dirty: boolean) => void
   onRunStep?: (step: number) => void
+  onRewriteStep1FromReview?: () => void
   runningStep?: boolean
+  rewritingStep1?: boolean
   pipelineBusy?: boolean
 }) {
   const hasArts =
     arts && (Boolean(arts.text?.trim()) || arts.images.length > 0 || arts.videos.length > 0)
   const showEmpty =
     row.status === "pending" || row.status === "cancelled" || (!hasArts && row.status !== "running")
+
+  const imageSrc = (path: string, updatedAt?: string) => {
+    const base = fileUrl(detail.run_id, path)
+    return updatedAt ? `${base}&v=${encodeURIComponent(updatedAt)}` : base
+  }
 
   return (
     <section
@@ -109,6 +124,15 @@ function StepBlock({
         </pre>
       )}
 
+      {review && row.status === "success" && (
+        <div className="mb-4">
+          <ReviewBadge review={review} step={stepNum} />
+          {typeof review.score === "number" && (
+            <ScoreBar score={review.score} className="mt-2" />
+          )}
+        </div>
+      )}
+
       {row.status === "running" && !hasArts && (
         <p className="text-sm text-muted-foreground">步骤执行中，产物生成后将显示在此处。</p>
       )}
@@ -128,6 +152,9 @@ function StepBlock({
               textKind={arts.text_kind}
               onSaved={isEditableStep(stepNum) ? onArtifactSaved : undefined}
               onDirtyChange={isActive && isEditableStep(stepNum) ? onDirtyChange : undefined}
+              onRewriteFromReview={stepNum === 1 ? onRewriteStep1FromReview : undefined}
+              rewritingFromReview={rewritingStep1}
+              rewriteDisabled={pipelineBusy}
             />
           ) : null}
 
@@ -139,8 +166,18 @@ function StepBlock({
                   <ArtifactMediaCard
                     key={im.path}
                     kind="image"
-                    src={fileUrl(detail.run_id, im.path)}
+                    src={imageSrc(im.path, im.updated_at)}
                     label={im.label}
+                    prompt={im.prompt}
+                    regenerateDisabled={pipelineBusy}
+                    onRegenerate={
+                      stepNum === 3
+                        ? async (prompt) => {
+                            await postRegenerateStep3Image(detail.run_id, { path: im.path, prompt })
+                            onArtifactSaved?.(stepNum)
+                          }
+                        : undefined
+                    }
                   />
                 ))}
               </div>
@@ -173,11 +210,14 @@ export function StepArtifactsPanel({
   detail,
   artByStep,
   activeStep,
+  runReviews,
   onArtifactSaved,
   onDirtyChange,
   onRunStep,
+  onRewriteStep1FromReview,
   onRunAll,
   runningStep,
+  rewritingStep1,
   runningAll,
   pipelineBusy,
 }: StepArtifactsPanelProps) {
@@ -189,6 +229,7 @@ export function StepArtifactsPanel({
     updated_at: null,
   }
 
+  const review = runReviews?.reviews?.[sid] ?? null
   const busy = pipelineBusy || runningStep || runningAll
 
   return (
@@ -220,10 +261,13 @@ export function StepArtifactsPanel({
         detail={detail}
         arts={artByStep[sid]}
         isActive
+        review={review}
         onArtifactSaved={onArtifactSaved}
         onDirtyChange={onDirtyChange}
         onRunStep={onRunStep}
+        onRewriteStep1FromReview={onRewriteStep1FromReview}
         runningStep={runningStep}
+        rewritingStep1={rewritingStep1}
         pipelineBusy={pipelineBusy}
       />
     </div>

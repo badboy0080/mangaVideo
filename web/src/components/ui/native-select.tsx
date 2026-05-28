@@ -13,16 +13,27 @@ export const nativeSelectPillClass =
 interface NativeSelectProps extends React.ComponentPropsWithoutRef<"select"> {
   /** 右侧留白给箭头图标 */
   iconClassName?: string
+  leadingIcon?: React.ReactNode
 }
 
 /**
  * 原生 &lt;select&gt; + 统一样式（无外框线，与 Input 家族一致）。
  */
 const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
-  ({ className, iconClassName, children, disabled, ...props }, ref) => {
+  ({ className, iconClassName, leadingIcon, children, disabled, ...props }, ref) => {
     return (
       <div className={cn("relative min-w-[7rem]", iconClassName)}>
-        <select ref={ref} disabled={disabled} className={cn(nativeSelectTriggerClass, className)} {...props}>
+        {leadingIcon ? (
+          <span className="pointer-events-none absolute start-3 top-1/2 flex size-4 -translate-y-1/2 items-center justify-center text-muted-foreground">
+            {leadingIcon}
+          </span>
+        ) : null}
+        <select
+          ref={ref}
+          disabled={disabled}
+          className={cn(nativeSelectTriggerClass, className, leadingIcon ? "ps-9" : "")}
+          {...props}
+        >
           {children}
         </select>
         <ChevronDown

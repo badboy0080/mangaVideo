@@ -50,7 +50,11 @@ def run(conn, video_prompts: dict, out_dir: str, concurrency: int = 3) -> list:
     _ = conn
     os.makedirs(f"{out_dir}/videos", exist_ok=True)
     results = []
-    pending = [(sid, data) for sid, data in video_prompts.items() if _resolve_reference_paths(data)]
+    pending = [
+        (sid, data)
+        for sid, data in video_prompts.items()
+        if str(data.get("prompt") or "").strip() and _resolve_reference_paths(data)
+    ]
     db_path = f"{out_dir}/assets.db"
 
     print(f"  Segments (Seedance 2.0): {len(pending)}, concurrency={concurrency}")

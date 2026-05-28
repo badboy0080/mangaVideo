@@ -4,6 +4,10 @@
 # 核心依赖
 requests>=2.31.0
 python-dotenv>=1.0.0
+pypinyin>=0.51.0
+
+# AgentScope 多智能体框架（流水线编排与监控）
+agentscope>=0.2.0
 
 # 控制台 Web API
 fastapi>=0.115.0

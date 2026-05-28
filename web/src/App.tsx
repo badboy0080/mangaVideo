@@ -9,8 +9,18 @@ import { RunPipelineView } from "@/components/pipeline/RunPipelineView"
 import { ProjectRunTitle } from "@/components/pipeline/ProjectRunTitle"
 import { RunDetailSkeleton } from "@/components/RunDetailSkeleton"
 import { Button } from "@/components/ui/button"
-import type { RunDetail, RunSummary, StepArtifacts } from "@/lib/api"
-import { API_BASE, apiJson, apiText, deleteRun, patchRunTopic, postRunPipelineAll, postRunStep } from "@/lib/api"
+import type { RunDetail, RunReviews, RunSummary, StepArtifacts } from "@/lib/api"
+import {
+  API_BASE,
+  apiJson,
+  apiText,
+  deleteRun,
+  getRunReviews,
+  patchRunTopic,
+  postRewriteStep1FromReview,
+  postRunPipelineAll,
+  postRunStep,
+} from "@/lib/api"
 import { isStylePreset } from "@/lib/run-presets"
 const HEALTH_DISMISS_KEY = "mp_ui_health_banner_dismiss_session"
 
@@ -67,10 +77,20 @@ export default function App() {
   const artLoadedKeys = useRef<Set<string>>(new Set())
   const artDirtyRef = useRef(false)
   const [runningStepReq, setRunningStepReq] = useState(false)
+  const [rewritingStep1Req, setRewritingStep1Req] = useState(false)
   const [runningAllReq, setRunningAllReq] = useState(false)
   const [savingTopic, setSavingTopic] = useState(false)
   const [logByStep, setLogByStep] = useState<Record<string, string>>({})
   const [artByStep, setArtByStep] = useState<Record<string, StepArtifacts>>({})
+  const [runReviews, setRunReviews] = useState<RunReviews | null>(null)
+  const fetchRunReviews = useCallback(async (runId: string) => {
+    try {
+      const r = await getRunReviews(runId)
+      setRunReviews(r)
+    } catch {
+      /* 静默失败：审核数据并非必需 */
+    }
+  }, [])
   const fetchStepLog = useCallback(async (step: number) => {
     if (!selected) return
     const path = `/api/runs/${encodeURIComponent(selected)}/steps/${step}/log`
@@ -163,6 +183,7 @@ export default function App() {
     try {
       const d = await apiJson<RunDetail>(`/api/runs/${encodeURIComponent(runId)}`)
       setDetail(d)
+      void fetchRunReviews(runId)
     } catch (e) {
       if (!silent) {
         setErr(e instanceof Error ? e.message : String(e))
@@ -171,7 +192,7 @@ export default function App() {
     } finally {
       if (!silent) setLoadingDetail(false)
     }
-  }, [])
+  }, [fetchRunReviews])
   const handleRunStep = useCallback(
     async (step: number) => {
       if (!selected) return
@@ -205,6 +226,22 @@ export default function App() {
       setRunningAllReq(false)
     }
   }, [selected, refreshDetail])
+  const handleRewriteStep1FromReview = useCallback(async () => {
+    if (!selected) return
+    setRewritingStep1Req(true)
+    setErr(null)
+    try {
+      await postRewriteStep1FromReview(selected)
+      await refreshDetail(selected, { silent: true })
+      artLoadedKeys.current.delete(`${selected}:1`)
+      void fetchStepArt(1)
+      void fetchStepLog(1)
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : String(e))
+    } finally {
+      setRewritingStep1Req(false)
+    }
+  }, [selected, fetchStepArt, fetchStepLog, refreshDetail])
   const handleRenameTopic = useCallback(
     async (nextTopic: string) => {
       if (!selected) return
@@ -362,7 +399,7 @@ export default function App() {
   }
   const displayStep = Math.min(5, Math.max(1, focusedStep))
   const isHome = !selected
-  const pipelineBusy = anyRunning(detail) || runningStepReq || runningAllReq
+  const pipelineBusy = anyRunning(detail) || runningStepReq || rewritingStep1Req || runningAllReq
 
   function goHome() {
     setSelected(null)
@@ -542,13 +579,16 @@ export default function App() {
                   onStepChange={handleStepChange}
                   artByStep={artByStep}
                   logByStep={logByStep}
+                  runReviews={runReviews}
                   onFetchArt={(step) => void fetchStepArt(step)}
                   onFetchLog={(step) => void fetchStepLog(step)}
                   onArtifactSaved={handleArtifactSaved}
                   onArtDirtyChange={handleArtDirtyChange}
                   onRunStep={(step) => void handleRunStep(step)}
+                  onRewriteStep1FromReview={() => void handleRewriteStep1FromReview()}
                   onRunAll={() => void handleRunAll()}
                   runningStepReq={runningStepReq}
+                  rewritingStep1Req={rewritingStep1Req}
                   runningAllReq={runningAllReq}
                   pipelineBusy={pipelineBusy}
                 />

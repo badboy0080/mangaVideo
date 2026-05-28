@@ -23,10 +23,9 @@
 - 若本镜为大自然风光、空镜头、纯建筑/环境交代、或孤立的物品特写，且**绝对没有人类/仿生人等角色主体**出现，判定为 `true`；否则必须为 `false`。
 
 ### 3. `reference_tag_priority` 动态排序逻辑
-根据 `draft_prompt` 的镜头焦点，动态调整 `["scene", "character", "prop"]` 这三类的参考优先级。例如：
-- **角色特写/中景/动作主导：** `["character", "scene", "prop"]` 
-- **大环境交代/全景/远景/空镜头：** `["scene", "character", "prop"]`
-- **特写物件/核心道具为主：** `["prop", "scene", "character"]`
+根据 `draft_prompt` 的镜头焦点，动态调整 `["scene", "character"]` 这两类的参考优先级。道具不再作为独立资产，不参与排序。例如：
+- **角色特写/中景/动作主导：** `["character", "scene"]`
+- **大环境交代/全景/远景/空镜头：** `["scene", "character"]`
 
 ---
 
@@ -37,13 +36,13 @@
 ## Output Schema Example
 {
   "1": {
-    "prompt": "全景，低角度推镜头。暗色调的赛博朋克废弃酒吧内，霓虹灯忽明忽暗。冷峻的男主角坐在吧台前，手中纳米扳手闪烁着微弱蓝光，体积光穿透雾气。",
+    "prompt": "全景，低角度推镜头。暗色调的赛博朋克废弃酒吧内，霓虹灯忽明忽暗。冷峻的男主角坐在吧台前，体积光穿透雾气。",
     "empty_shot": false,
-    "reference_tag_priority": ["character", "scene", "prop"]
+    "reference_tag_priority": ["character", "scene"]
   },
   "2": {
-    "prompt": "特写，固定镜头。吧台上的纳米扳手金属表面做旧，精密齿轮泛着冷冽蓝光，背景深度虚化。",
+    "prompt": "特写，固定镜头。废弃酒吧吧台表面金属做旧，精密齿轮泛着冷冽蓝光，背景深度虚化。",
     "empty_shot": true,
-    "reference_tag_priority": ["prop", "scene", "character"]
+    "reference_tag_priority": ["scene", "character"]
   }
 }

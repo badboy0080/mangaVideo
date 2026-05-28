@@ -63,6 +63,11 @@ def run(
     _ = conn
     manual_refs = _read_existing_manual_refs(out_dir)
     video_prompts = build_video_prompts(to_script_data(storyboard), img_results, db_path, out_dir)
+    if not video_prompts:
+        raise RuntimeError(
+            "Step04 未解析到可生成视频的分镜片段。请检查 Step02 是否包含“分镜 N｜X 秒｜标题”标题行，"
+            "并保留“图生视频（I2V）— 整段复制”正文。"
+        )
     video_prompts = _merge_manual_refs(video_prompts, manual_refs)
 
     tconn = sqlite3.connect(db_path)

@@ -12,7 +12,7 @@ import re
 
 # 整行均为分镜标题：分镜 N｜X秒｜第三段可有可无；允许模型加 Markdown 标题前缀。
 _SHOT_HDR = re.compile(
-    r"(?m)^[^\S\r\n]*(?:#{1,6}[^\S\r\n]*)?分镜\s*(\d+)\s*[｜|]\s*(\d+)\s*秒[^\r\n]*$",
+    r"(?m)^[^\S\r\n]*(?:#{1,6}[^\S\r\n]*)?(?:\*\*)?\s*分镜\s*(\d+)\s*[｜|]\s*(\d+)\s*秒[^\r\n]*?(?:\*\*)?[^\S\r\n]*$",
 )
 
 
@@ -46,7 +46,7 @@ def split_shots_by_headers(script: str) -> list[tuple[str, int | None, str]]:
 def split_shots_legacy(script: str) -> list[tuple[str, int | None, str]]:
     """与原 step_06 相同的后备：整段正则 + ## 镜头。"""
     pattern = re.compile(
-        r"(?:^|\n)\s*(?:#{1,6}\s*)?分镜\s*(\d+)\s*[｜|]\s*(\d+)\s*秒\s*[｜|]?\s*(.+?)(?=\n\s*(?:#{1,6}\s*)?分镜\s*\d+\s*[｜|]|\Z)",
+        r"(?:^|\n)\s*(?:#{1,6}\s*)?(?:\*\*)?\s*分镜\s*(\d+)\s*[｜|]\s*(\d+)\s*秒\s*[｜|]?\s*(.+?)(?=\n\s*(?:#{1,6}\s*)?(?:\*\*)?\s*分镜\s*\d+\s*[｜|]|\Z)",
         re.DOTALL,
     )
     matches = pattern.findall(script)

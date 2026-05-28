@@ -8,6 +8,13 @@
       "relative_filename": "step_01/_base.txt",
       "style_dir": "step_01/styles"
     },
+    "step_01_review.system": {
+      "description": "Step 1 script brief review system prompt.",
+      "enabled": true,
+      "env_path_key": "STEP01_REVIEW_SYSTEM_PROMPT_FILE",
+      "relative_filename": "step_01_review/_base.txt",
+      "rules_filename": "step_01_review/rules.json"
+    },
     "step_02_storyboard.system": {
       "description": "Step 2 storyboard and asset text-to-image prompt generation system prompt.",
       "enabled": true,
@@ -31,6 +38,12 @@
       "enabled": true,
       "env_path_key": "STEP04_VIDEO_SYSTEM_PROMPT_FILE",
       "relative_filename": "step_06_i2v_polish_system.txt"
+    },
+    "step_06_cover.system": {
+      "description": "Step 6 short film cover image prompt generation system prompt.",
+      "enabled": true,
+      "env_path_key": "STEP06_COVER_SYSTEM_PROMPT_FILE",
+      "relative_filename": "step_06_cover_system.txt"
     }
   }
 }

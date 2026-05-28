@@ -15,7 +15,6 @@ from steps.step_06_video_prompts import (  # noqa: E402
     _build_image_alias_map,
     _build_token_display_map,
     _extract_dialogues,
-    _inject_dialogues,
     _resolve_semantic_alias,
 )
 
@@ -47,7 +46,7 @@ class TestStep04GenerateVideos(unittest.TestCase):
         self.assertEqual(result[1], paths[1])
         self.assertEqual(result[-1], paths[8])
 
-    def test_dialogue_cue_is_injected_into_prompt(self) -> None:
+    def test_dialogue_cue_is_extracted_but_not_injected_into_prompt(self) -> None:
         token_map = _build_token_display_map(
             {"图片1": {"name": "小明", "tag": "character"}},
             {"characters": [{"name": "小明"}], "scenes": [], "props": []},
@@ -59,10 +58,11 @@ class TestStep04GenerateVideos(unittest.TestCase):
 | 情绪效果 | 愉快、惊奇 |
 """
         dialogues = _extract_dialogues(shot, token_map)
-        prompt = _inject_dialogues("摄像机缓慢推近。{原来这就是入木三分！} no music, no subtitles", dialogues)
+        prompt = "摄像机缓慢推近。{原来这就是入木三分！} no music, no subtitles"
 
         self.assertEqual(dialogues[0]["speaker"], "小明")
-        self.assertIn("小明愉快的说“原来这就是入木三分！”", prompt)
+        self.assertEqual(dialogues[0]["cue"], "小明愉快的说“原来这就是入木三分！”")
+        self.assertNotIn("小明愉快的说", prompt)
         self.assertTrue(prompt.endswith("no music, no subtitles"))
 
     def test_image_alias_map_matches_pinyin_element_id(self) -> None:

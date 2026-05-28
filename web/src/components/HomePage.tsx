@@ -35,7 +35,7 @@ export function HomePage({
   deletingRunId = null,
 }: HomePageProps) {
   return (
-    <div className="space-y-8 pb-20 sm:space-y-12">
+    <div className="mt-[200px] space-y-8 pb-20 sm:space-y-12">
       <header className="mx-auto max-w-4xl pt-2 text-center">
         <HomeHeroTypewriter />
       </header>

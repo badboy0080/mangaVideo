@@ -22,17 +22,21 @@ from pydantic import BaseModel, Field
 from server.pipeline_runner import (
     delete_run,
     get_run_detail,
+    get_run_reviews,
     get_step_artifacts,
     init_run,
     list_runs,
     preflight_run_all,
+    preflight_rewrite_step1_from_review,
     preflight_run_step,
     read_step_log,
+    regenerate_step3_image,
     request_stop,
     resolve_out_dir,
     safe_rel_file,
     save_step_artifact_text,
     spawn_pipeline_all_thread,
+    spawn_rewrite_step1_from_review_thread,
     spawn_step_thread,
     update_run_topic,
 )
@@ -119,6 +123,11 @@ class SaveArtifactTextBody(BaseModel):
     text_kind: str = Field(..., pattern="^(json|markdown)$")
 
 
+class RegenerateImageBody(BaseModel):
+    path: str = Field(..., min_length=1, max_length=500)
+    prompt: str = Field(..., min_length=1, max_length=8000)
+
+
 class UpdateRunTopicBody(BaseModel):
     topic: str = Field(..., min_length=1, max_length=200)
 
@@ -128,7 +137,7 @@ def health() -> dict:
     # Bump when adding endpoints so the UI / dev can confirm the running process is up to date.
     return {
         "ok": True,
-        "api_revision": 15,
+        "api_revision": 17,
         "project_root": str(ROOT.resolve()),
         "cwd": str(Path.cwd().resolve()),
         "seedream": seedream_status(),
@@ -139,6 +148,8 @@ def health() -> dict:
             "patch_run_topic",
             "run_file",
             "run_all",
+            "rewrite_step1_from_review",
+            "regenerate_step3_image",
             "stop",
             "delete_run",
             "seedream_generate",
@@ -203,6 +214,22 @@ def run_all(run_id: str, force: bool = Query(False)) -> dict:
     return {"queued": True, "run_id": run_id, "mode": "run_all", "force": force}
 
 
+@app.post("/api/runs/{run_id}/steps/1/rewrite-from-review")
+def rewrite_step1_from_review(run_id: str) -> dict:
+    out_dir = f"outputs/{run_id}"
+    try:
+        preflight_rewrite_step1_from_review(out_dir)
+    except FileNotFoundError:
+        raise HTTPException(404, "run or Step1 artifact not found") from None
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+    except RuntimeError as e:
+        raise HTTPException(409, str(e)) from e
+    if not spawn_rewrite_step1_from_review_thread(out_dir):
+        raise HTTPException(409, "Another step is already running for this output folder")
+    return {"queued": True, "run_id": run_id, "step": 1, "mode": "rewrite_from_review"}
+
+
 @app.get("/api/runs/{run_id}/steps/{step}/log", response_class=PlainTextResponse)
 def step_log(run_id: str, step: int) -> PlainTextResponse:
     if step < 1 or step > 5:
@@ -251,6 +278,16 @@ def step_artifacts(run_id: str, step: int) -> dict:
     return get_step_artifacts(out_dir, step)
 
 
+@app.get("/api/runs/{run_id}/reviews")
+def run_reviews(run_id: str) -> dict:
+    """获取所有步骤的审核结果和创意总监指导。"""
+    out_dir = f"outputs/{run_id}"
+    d = resolve_out_dir(out_dir)
+    if not d.is_dir():
+        raise HTTPException(404, detail={"error": "run_dir_missing", "run_id": run_id})
+    return get_run_reviews(out_dir)
+
+
 @app.put("/api/runs/{run_id}/steps/{step}/artifacts/text")
 def save_artifact_text(run_id: str, step: int, body: SaveArtifactTextBody) -> dict:
     if step < 1 or step > 5:
@@ -260,6 +297,19 @@ def save_artifact_text(run_id: str, step: int, body: SaveArtifactTextBody) -> di
         return save_step_artifact_text(out_dir, step, body.text, body.text_kind)
     except FileNotFoundError:
         raise HTTPException(404, "run not found") from None
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from e
+    except RuntimeError as e:
+        raise HTTPException(409, str(e)) from e
+
+
+@app.post("/api/runs/{run_id}/steps/3/images/regenerate")
+def regenerate_step3_image_route(run_id: str, body: RegenerateImageBody) -> dict:
+    out_dir = f"outputs/{run_id}"
+    try:
+        return regenerate_step3_image(out_dir, body.path, body.prompt)
+    except FileNotFoundError:
+        raise HTTPException(404, "run or image not found") from None
     except ValueError as e:
         raise HTTPException(400, str(e)) from e
     except RuntimeError as e:

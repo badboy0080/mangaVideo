@@ -62,7 +62,7 @@ export interface HotSkillsRowProps {
 export function HotSkillsRow({ onPickPreset }: HotSkillsRowProps) {
   return (
     <section id="home-hot-skills" className="scroll-mt-24 space-y-6">
-      <h2 className="flova-section-title text-foreground">热门预设</h2>
+      <h2 className="w-full text-center text-base font-normal leading-snug text-muted-foreground">热门预设</h2>
       <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 pt-0.5 mp-scrollbar sm:mx-0 sm:px-0">
         {HOT_COPY.map((item) => (
           <button

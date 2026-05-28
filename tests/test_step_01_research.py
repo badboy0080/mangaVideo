@@ -34,7 +34,7 @@ class TestStep01Research(unittest.TestCase):
         sys = step_01_research.load_step01_system_prompt("品牌广告")
         self.assertIn("风格专章", sys)
         self.assertIn("当前风格类型：品牌广告", sys)
-        self.assertIn("品牌创意总监", sys)
+        self.assertIn("Creative Brief已完成", sys)
 
     def test_load_prompt_alias_same_as_canonical(self) -> None:
         a = step_01_research.load_step01_system_prompt("广告片")
