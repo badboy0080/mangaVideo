@@ -1,5 +1,29 @@
 # handoff-log
 
+## 2026-05-28 - README 大图改为 MangaVideo 品牌图
+
+- **本轮用户想做什么**：让 README 大图更简洁，黑底，主标题 `MangaVideo`，标题上方加品牌形象，标题下方加副标题“一键把你的想象变成现实”。
+- **已经完成**：生成新图 `docs/assets/manga-video-hero.png`；更新 `README.md` 顶部标题和图片引用。
+- **改动文件**：`README.md`、`docs/assets/manga-video-hero.png`、`workUp.md`、`handoff-log.md`。
+- **验证**：已打开新图检查，确认画面为黑底品牌横幅，包含机器人导演形象、`MangaVideo` 和中文副标题。
+- **待办/风险**：AI 生成图中的中文副标题有装饰性字距，若后续要求绝对标准字体，可改用 HTML/SVG 精准排版版本。
+
+## 2026-05-28 - README 与项目手绘大图
+
+- **本轮用户想做什么**：根据项目特点生成新的 README，并做一张手绘风格项目大图。
+- **已经完成**：生成项目横幅图 `docs/assets/manga-pipeline-hero.png`；重写 `README.md`，覆盖项目介绍、功能流程、技术栈、启动方式、产物目录和 Git 忽略说明。
+- **改动文件**：`README.md`、`docs/assets/manga-pipeline-hero.png`、`workUp.md`、`handoff-log.md`。
+- **验证**：已打开检查图片；README 图片路径为项目内相对路径，可用于 GitHub 展示。
+- **待办/风险**：当前 README 以最新 6 个可见流水线步骤为准；若后续 UI/后端步骤编号再调整，需要同步更新 README。
+
+## 2026-05-28 - 补充项目忽略规则
+
+- **本轮用户想做什么**：分析项目里还有哪些文件适合忽略，并写入 `.gitignore`。
+- **已经完成**：新增忽略日志、数据库、旧输出目录、前端构建产物、编辑器本地目录、临时文件；修正 `lib/` 误忽略 `web/src/lib/` 的问题。
+- **改动文件**：`.gitignore`、`workUp.md`、`handoff-log.md`；取消 Git 跟踪 `db/*.db`、`manga-pipeline/db/*.db`、`manga-pipeline/output/`，本地文件保留。
+- **验证**：`git ls-files db/*.db manga-pipeline/db/*.db manga-pipeline/output` 无输出；`git check-ignore` 确认忽略规则生效；`web/src/lib/` 已恢复为可提交源码。
+- **待办/风险**：`web/src/lib/` 现在显示为未跟踪源码，建议后续提交时一并加入 Git，否则远端可能缺少前端 API/解析工具代码。
+
 ## 2026-05-28 - 提交前清理 Git 跟踪文件
 
 - **本轮用户想做什么**：把项目提交到 GitHub，并确保 `node_modules`、`outputs`、`.env` 不再上传。

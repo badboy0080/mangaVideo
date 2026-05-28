@@ -14,8 +14,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -139,6 +139,44 @@ venv.bak/
 # Project generated/local files
 node_modules/
 outputs/
+output/
+logs/
+*.sqlite
+*.sqlite3
+*.db-journal
+*.sqlite-journal
+*.sqlite3-journal
+
+# Project local database/runtime state
+db/*.db
+manga-pipeline/db/*.db
+manga-pipeline/output/
+manga-pipeline/outputs/
+
+# Frontend generated/local files
+web/node_modules/
+web/dist/
+web/.vite/
+web/vite.*.log
+
+# Local editor/assistant state
+.idea/
+.vscode/
+.cursor/
+.trae/
+
+# OS/editor temp files
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Keep frontend source helpers trackable; the generic Python lib rule above is root-only.
+!web/src/lib/
+!web/src/lib/**
 
 # Spyder project settings
 .spyderproject
