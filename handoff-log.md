@@ -1,5 +1,13 @@
 # handoff-log
 
+## 2026-05-28 - 修复 .env.example 模板
+
+- **本轮用户想做什么**：`.env.example` 有乱码；根据 `.env` 复制模板，但去掉真实密钥。
+- **已经完成**：重写 `.env.example` 为干净中文模板；保留 `DEEPSEEK_API_KEY`、`ARK_API_KEY`、`VOLCENGINE_API_KEY` 三个变量，值全部为空。
+- **改动文件**：`.env.example`、`workUp.md`、`handoff-log.md`。
+- **验证**：未输出真实 `.env` 密钥；检查 `.env.example` 没有 `=实际值`；`git diff --check -- .env.example` 通过。
+- **待办/风险**：PowerShell 终端可能仍用错误编码显示中文为乱码，但文件内容按 UTF-8 保存，GitHub/编辑器中应正常显示。
+
 ## 2026-05-28 - README 大图改为 MangaVideo 品牌图
 
 - **本轮用户想做什么**：让 README 大图更简洁，黑底，主标题 `MangaVideo`，标题上方加品牌形象，标题下方加副标题“一键把你的想象变成现实”。

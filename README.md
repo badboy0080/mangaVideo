@@ -1,194 +1,244 @@
-# MangaVideo
+<p align="center">
+  <img
+    src="docs/assets/manga-video-hero.png"
+    alt="MangaVideo Logo"
+    width="600"
+  />
+</p>
 
-![MangaVideo 项目大图](docs/assets/manga-video-hero.png)
+<span align="center">
 
-一个面向短片创作的 AI 流水线工具：输入一个创意主题，系统会一步步生成剧本纲要、分镜、角色/场景资产图、视频片段、最终成片和封面图。
+[**English**](./README.md) | [**项目文档**](./docs/) | [**提示词说明**](./prompts/README.md)
 
-它适合用来做：
+</span>
 
-- 漫画感短片 / 动画叙事
-- 电影短片概念片
-- 品牌广告短片
-- 游戏 CG 风格短片
-- MV、科幻短片、纪录片风格内容
+<p align="center">
+    <a href="https://github.com/agentscope-ai/agentscope">
+        <img
+            src="https://img.shields.io/badge/AgentScope-2.0-blue?logo=agent&logoColor=white"
+            alt="AgentScope"
+        />
+    </a>
+    <a href="https://www.python.org/">
+        <img
+            src="https://img.shields.io/badge/python-3.11+-blue?logo=python"
+            alt="python"
+        />
+    </a>
+    <a href="https://fastapi.tiangolo.com/">
+        <img
+            src="https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi"
+            alt="fastapi"
+        />
+    </a>
+    <a href="https://react.dev/">
+        <img
+            src="https://img.shields.io/badge/React-19-61DAFB?logo=react"
+            alt="react"
+        />
+    </a>
+    <a href="https://www.apache.org/licenses/LICENSE-2.0">
+        <img
+            src="https://img.shields.io/badge/license-Apache--2.0-black"
+            alt="license"
+        />
+    </a>
+</p>
 
-## 项目能做什么
+## 什么是 MangaVideo？
 
-你只需要在网页里输入一个主题，例如：
+MangaVideo 是一个基于 **AgentScope 2.0 多智能体框架**的 AI 短片自动生成流水线。你只需要输入一个创意主题，系统就会调度多个 AI Agent 协作——从剧本研究、分镜设计、视觉资产生成、视频合成到封面海报——全自动完成一部短片。
 
-> 一个关于少年与飞鱼的奇幻冒险故事，发生在云上的古老小镇。
+我们为创意工作者而设计。
+我们的方法是让多个 AI Agent 像一支真正的制作团队一样协作，
+而不是把各个环节割裂成独立的工具。
 
-然后系统会按步骤推进：
+## 为什么选择 MangaVideo？
 
-1. **剧本**：用 DeepSeek 生成故事大纲、人物与场景方向。
-2. **分镜**：把故事拆成镜头，生成每个镜头的画面说明和视频提示词。
-3. **资产**：提取主要角色和场景，整理成可复用的视觉资产。
-4. **视频**：用 Seedream / Seedance 生成图片和视频片段。
-5. **成片**：用 ffmpeg 把视频片段拼接成 `final.mp4`。
-6. **封面**：根据故事生成短片封面图，方便项目展示。
+- **一键成片**：输入主题 → 选择风格 → 自动生成完整短片，6 个步骤全自动推进
+- **多智能体协作**：创意总监、剧本研究员、分镜导演、美术生成师、视频生成师、质量审核员——7 个 Agent 各司其职
+- **全流程质量把关**：每一步产出都有审核 Agent 打分评估，不通过自动返工
+- **Web 控制台**：可视化进度链、产物预览、文本编辑、单步重跑、运行日志一应俱全
+- **7 种风格预设**：电影短片、品牌广告、动画叙事、游戏 CG、MV、科幻短片、纪录片风格
+- **Hook 全链路监控**：基于 AgentScope Middleware 的日志、进度、停止检查实时可见
 
-项目还带有一个 Web 控制台，可以查看每一步产物、编辑文本、重跑单步、查看运行日志。
+<p align="center">
+  <img src="docs/assets/manga-pipeline-hero.png" alt="MangaVideo Pipeline" width="100%"/>
+</p>
 
-## 项目结构
+## 新闻
 
-```text
-manga-pipeline/
-├─ web/                 # 前端页面，React + Vite
-├─ server/              # 后端 API，FastAPI
-├─ steps/               # 每一步流水线逻辑
-├─ agents/              # Agent 封装：导演、审核员、生成员等
-├─ prompts/             # 各步骤使用的提示词模板
-├─ tests/               # 自动化测试
-├─ docs/                # 项目文档和 README 图片
-├─ outputs/             # 本地生成结果，已被 Git 忽略
-├─ db/                  # 本地数据库，已被 Git 忽略
-└─ .env                 # 本地密钥配置，已被 Git 忽略
+<!-- BEGIN NEWS -->
+- **[2026-05] `发布`:** MangaVideo 基于 AgentScope 2.0 重构完成！多智能体协作体系全面落地，新增创意总监 Agent、全流程质量审核、封面生成功能。
+- **[2026-05] `功能`:** Step3 图片提示词可视化编辑与单图重新生成功能上线。
+- **[2026-05] `架构`:** 流水线核心迁移至 AgentScope Pipeline 编排器，支持 Hook 监控和智能编排。
+<!-- END NEWS -->
+
+## 社区
+
+欢迎加入 AgentScope 社区，交流多智能体开发经验：
+
+| [Discord](https://discord.gg/eYMpfnkG8h) | 钉钉 |
+| --- | --- |
+| <img src="https://gw.alicdn.com/imgextra/i1/O1CN01hhD1mu1Dd3BWVUvxN_!!6000000000238-2-tps-400-400.png" width="100" height="100"> | <img src="./assets/images/dingtalk_qr_code.png" width="100" height="100"> |
+
+## 📑 Table of Contents
+
+- [快速开始](#快速开始)
+  - [安装](#安装)
+    - [安装 AgentScope 2.0](#安装-agentscope-20)
+    - [安装 Python 依赖](#安装-python-依赖)
+    - [配置密钥](#配置密钥)
+    - [安装前端依赖](#安装前端依赖)
+- [Hello MangaVideo！](#hello-mangavideo)
+  - [Web 控制台启动](#web-控制台启动)
+  - [命令行一键运行](#命令行一键运行)
+- [多智能体架构](#多智能体架构)
+- [贡献](#贡献)
+- [许可](#许可)
+
+## 快速开始
+
+### 安装
+
+> MangaVideo 需要 **Python 3.11** 或更高版本，以及 **Node.js 18+** 和 **pnpm**。
+
+#### 安装 AgentScope 2.0
+
+```bash
+pip install agentscope
+
+# 或从源码安装
+# git clone https://github.com/agentscope-ai/agentscope
+# cd agentscope
+# pip install -e .
 ```
 
-## 技术栈
+#### 安装 Python 依赖
 
-| 模块 | 技术 |
-| --- | --- |
-| 前端 | React、TypeScript、Vite、Tailwind CSS |
-| 后端 | Python、FastAPI |
-| 文本生成 | DeepSeek |
-| 图片生成 | Seedream |
-| 视频生成 | Seedance |
-| 视频拼接 | ffmpeg |
-| 数据存储 | 本地 SQLite / 输出文件 |
-
-## 第一次使用
-
-### 1. 安装 Python 依赖
-
-在项目根目录执行：
-
-```powershell
+```bash
+cd manga-pipeline
 pip install -r requirements.txt
 ```
 
-### 2. 配置密钥
+#### 配置密钥
 
-复制环境变量模板：
-
-```powershell
-Copy-Item .env.example .env
+```bash
+cp .env.example .env
 ```
 
-然后打开 `.env`，填入你的密钥：
+编辑 `.env` 文件：
 
 ```env
 DEEPSEEK_API_KEY=你的 DeepSeek 密钥
 ARK_API_KEY=你的火山引擎 Ark 密钥
 ```
 
-说明：
+- `DEEPSEEK_API_KEY`：用于剧本、分镜、提示词生成和审核
+- `ARK_API_KEY`：用于 Seedream 文生图和 Seedance 图生视频
 
-- `DEEPSEEK_API_KEY`：用于生成剧本、分镜、提示词、审核意见。
-- `ARK_API_KEY`：用于 Seedream 生图和 Seedance 生视频。
+#### 安装前端依赖
 
-### 3. 安装前端依赖
-
-```powershell
+```bash
 cd web
 pnpm install
 cd ..
 ```
 
-## 日常启动
+## Hello MangaVideo！
 
-需要开两个终端。
+### Web 控制台启动
 
-### 终端 1：启动后端
+**终端 1 — 启动后端**
 
-```powershell
+```bash
 python -m uvicorn server.main:app --host 127.0.0.1 --port 8765
 ```
 
-健康检查地址：
+健康检查：`http://127.0.0.1:8765/api/health`
 
-```text
-http://127.0.0.1:8765/api/health
-```
+**终端 2 — 启动前端**
 
-### 终端 2：启动前端
-
-```powershell
+```bash
 cd web
 pnpm dev
 ```
 
-浏览器打开：
+浏览器打开 `http://localhost:5173`，输入主题、选择风格，点击「运行全部步骤」即可。
 
-```text
-http://localhost:5173
+### 命令行一键运行
+
+```bash
+python pipeline.py "一个关于少年与飞鱼的奇幻冒险" --duration 90 --style 电影短片
 ```
 
-## 常用命令
-
-### 前端构建
-
-```powershell
-cd web
-pnpm run build
-```
-
-### 运行后端测试
-
-```powershell
-python -m unittest discover tests
-```
-
-### 命令行运行流水线
-
-```powershell
-python pipeline.py "你的短片主题" --duration 90 --style 电影短片
-```
-
-## 产物保存在哪里
-
-生成结果默认保存在：
+生成产物保存在 `outputs/<项目ID>/`：
 
 ```text
 outputs/<项目ID>/
+├── director_guidance.json   # 创意总监指导
+├── script_brief.json        # 剧本纲要
+├── step_01_review.json      # 剧本审核结果
+├── storyboard.json          # 分镜脚本
+├── step_02_review.json      # 分镜审核结果
+├── img_results.json         # 图片生成结果
+├── step_03_review.json      # 图片审核结果
+├── video_prompts.json       # 视频提示词
+├── step_04_review.json      # 视频审核结果
+├── images/                  # 角色/场景资产图
+├── videos/                  # 视频片段
+├── final.mp4                # 最终成片
+└── images/cover.png         # 封面海报
 ```
 
-常见文件包括：
+## 多智能体架构
 
-- `script_brief.json`：剧本纲要
-- `storyboard.json`：分镜内容
-- `assets.json`：角色和场景资产
-- `images/`：生成图片
-- `videos/`：生成视频片段
-- `final.mp4`：最终成片
-- `cover.png`：封面图
+MangaVideo 使用 AgentScope 2.0 的 Agent + Middleware + Pipeline 体系，构建了一支 7 人 AI 制作团队：
 
-这些都是本地生成物，已经加入 `.gitignore`，不会上传到 GitHub。
+```
+🎬 创意总监 (DirectorAgent)    ← 分析需求，输出创意指导纲要
+    │
+    ▼
+📝 剧本研究员 (ResearchAgent)   ← Step1 剧本生成 + 审核返工
+    │
+    ▼
+🎥 分镜导演 (StoryboardAgent)   ← Step2 分镜拆解 + 审核
+    │
+    ▼
+🎨 美术生成师 (ImageGenAgent)   ← Step3 角色/场景图片生成 + 审核
+    │
+    ▼
+🎬 视频生成师 (VideoGenAgent)   ← Step4 图生视频 + 审核
+    │
+    ▼
+✂️ 剪辑师 (ConcatAgent)        ← Step5 ffmpeg 拼接成片
+    │
+    ▼
+🖼️ 封面设计师 (CoverAgent)     ← Step6 电影节海报封面生成
+    │
+🔍 质量审核员 (ReviewerAgent)   ← 全流程质量把关（Step2/3/4）
+```
 
-## Git 忽略规则
+### 项目结构
 
-项目已经忽略这些本地文件：
+```text
+manga-pipeline/
+├── web/                 # React + Vite + Tailwind CSS 前端控制台
+├── server/              # FastAPI 后端 API 服务
+├── agents/              # AgentScope Agent 封装（7 个 Agent + 编排器 + Middleware）
+├── steps/               # 各步骤底层执行逻辑
+├── prompts/             # 提示词模板（7 种风格 + 审核规则）
+├── tests/               # 自动化测试
+├── docs/                # 设计文档
+└── outputs/             # 本地生成产物
+```
 
-- `.env`：本地密钥
-- `node_modules/`、`web/node_modules/`：依赖目录
-- `outputs/`、`output/`、`manga-pipeline/output/`：生成产物
-- `db/*.db`：本地数据库
-- `logs/`：运行日志
-- `web/dist/`：前端构建结果
-- `.cursor/`、`.trae/`、`.idea/`、`.vscode/`：本地编辑器配置
+## 贡献
 
-这样可以避免把密钥、视频、图片、数据库和缓存文件上传到仓库。
+我们欢迎社区的贡献！如果你有好的想法或发现 bug，欢迎提交 Issue 或 Pull Request。
 
-## 当前注意事项
+## 许可
 
-- 跑真实 AI 生成时，需要有效的 DeepSeek 和 Ark 密钥。
-- 生成视频和拼接成片前，请确认已经安装 `ffmpeg`。
-- 如果网页显示连接不上 API，优先检查后端是否还在运行。
-- 如果 GitHub 推送失败，多半是网络连不上 GitHub，不是项目代码问题。
+MangaVideo 基于 Apache License 2.0 发布。
 
-## 相关文档
-
-- [启动说明.md](启动说明.md)：更详细的本地启动说明
-- [handoff-log.md](handoff-log.md)：近期开发交接记录
-- [prompts/README.md](prompts/README.md)：提示词文件说明
-- [docs/ai-short-film-workflow-analysis.md](docs/ai-short-film-workflow-analysis.md)：AI 短片流程分析
+基于 [AgentScope 2.0](https://github.com/agentscope-ai/agentscope)（Apache 2.0）构建。
