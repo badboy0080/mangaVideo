@@ -74,13 +74,6 @@ MangaVideo 是一个基于 **AgentScope 2.0 多智能体框架**的 AI 短片自
 - **[2026-05] `架构`:** 流水线核心迁移至 AgentScope Pipeline 编排器，支持 Hook 监控和智能编排。
 <!-- END NEWS -->
 
-## 社区
-
-欢迎加入 AgentScope 社区，交流多智能体开发经验：
-
-| [Discord](https://discord.gg/eYMpfnkG8h) | 钉钉 |
-| --- | --- |
-| <img src="https://gw.alicdn.com/imgextra/i1/O1CN01hhD1mu1Dd3BWVUvxN_!!6000000000238-2-tps-400-400.png" width="100" height="100"> | <img src="./assets/images/dingtalk_qr_code.png" width="100" height="100"> |
 
 ## 📑 Table of Contents
 
